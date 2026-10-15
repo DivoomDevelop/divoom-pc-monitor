@@ -1,3 +1,33 @@
+# English
+
+Windows v1.2.0 / macOS v1.0.1 beta
+
+## Download and run
+
+- **Windows 10/11 x64:** download `DivoomPCMonitor-win-x64-v1.2.0.zip`, extract the entire archive and run `DivoomPCMonitor/Divoom.HardwareMonitor.exe`. Keep the complete directory. No separate .NET installation is needed.
+- **Apple Silicon Mac:** download `DivoomMacMonitor-osx-arm64-v1.0.1.tar.gz`.
+- **Intel Mac:** download `DivoomMacMonitor-osx-x64-v1.0.1.tar.gz`.
+- Mac requires macOS 14 or later. Extract the archive and copy the `.app` to Applications. Mac packages are betas without Developer ID signing, notarization or physical-Mac acceptance testing; Gatekeeper may block them. See the [Mac guide](https://github.com/DivoomDevelop/divoom-pc-monitor/blob/main/macos/README.en.md) for signing and notarization.
+- `SHA256SUMS-v1.2.0.txt` contains SHA-256 checksums for all three application packages. GitHub's automatically generated **Source code** archives contain source files, not ready-to-run applications.
+- Documentation: [English README](https://github.com/DivoomDevelop/divoom-pc-monitor/blob/main/README.en.md) · [中文 README](https://github.com/DivoomDevelop/divoom-pc-monitor/blob/main/README.md). Both languages are included in the application packages.
+
+## Changes
+
+- Reorganized the Windows dashboard using the imagegen layout reference: four metric cards at the top, disk list and source selectors on the left, and device connection controls on the right. Explicit grid row heights prevent overlapping controls. The send button stays at the bottom; connection content can scroll in smaller windows.
+- Windows shows TimeGate five-screen, LCD selection and independent-mode controls only for Hardware **400 or 402**; other models hide and collapse that section. Mac LCD controls also appear only for 400 or 402.
+- Preserves 19 interface languages, LocalToken input and its retrieval hint, and the existing endpoint and clock-selection whitelist rules.
+- Packages include the runtime and applicable third-party licenses. Windows also includes the matching smartmontools source archive.
+
+## Validation
+
+Windows builds and all **173 regression checks** passed. Both Mac architectures cross-build, and all **67 parser, protocol and language UI checks** passed. Package structure, Mac architectures and executable permissions were checked. The automated release workflow also verifies uploaded file sizes and SHA-256 digests.
+
+Full visual acceptance of the final Windows package across window sizes and DPI settings remains pending; interactive UI checking was stopped by the user. Mac hardware collection, actual installation and long-running behavior still require physical-Mac testing. See [validation scope](https://github.com/DivoomDevelop/divoom-pc-monitor/blob/main/docs/VALIDATION.md).
+
+---
+
+# 简体中文
+
 Windows v1.2.0 / macOS v1.0.1 测试版
 
 ## 下载和使用
