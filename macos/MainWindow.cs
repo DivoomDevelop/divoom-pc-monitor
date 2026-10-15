@@ -208,7 +208,7 @@ public sealed class MainWindow : Window
     {
         _lcd.IsVisible = _independent.IsVisible = (int)(_hardware.Value ?? 0) is 400 or 402;
         try { var target = new DeviceTarget(_ip.Text ?? "", (int)(_deviceId.Value ?? 0), Math.Max(0, _lcd.SelectedIndex), _independent.IsChecked == true ? 1 : 0, (int)(_hardware.Value ?? 0)); _endpoint.Text = target.PostUri.ToString(); }
-        catch (ArgumentException e) { _endpoint.Text = e.Message; }
+        catch (ArgumentException) { _endpoint.Text = Localizer.Get("请输入有效的设备 IPv4 地址。"); }
     }
     private void SetupTray()
     {
