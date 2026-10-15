@@ -1,0 +1,11 @@
+* text=auto
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.json text eol=lf
+*.exe -text
+*.png -text
+*.icns -text
+*.pdf -text
+*.tar.gz -text
+third_party/** -text
+licenses/** -text

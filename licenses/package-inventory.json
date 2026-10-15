@@ -1,0 +1,262 @@
+[
+  {
+    "Package": "BlackSharp.Core/1.0.7",
+    "Sha512": "LbEc4w0oZ7w4p6+8OjPZgwsJW470aQRuYZgZ9aMN2PW9R79pW3OnZQ32AVVx/21rstX9mKbXaOLWpSAxoANYxQ==",
+    "LicenseType": "expression",
+    "License": "MPL-2.0",
+    "LicenseUrl": "https://licenses.nuget.org/MPL-2.0",
+    "Source": "https://github.com/Blacktempel/BlackSharp",
+    "SourceCommit": "c70b735c6cec123ee8a046ac4a0bc6c606f52cf0",
+    "Copyright": "Florian K."
+  },
+  {
+    "Package": "DiskInfoToolkit/1.1.2",
+    "Sha512": "vN46svt1hQDkm269p6CzfwDpb/fbyp8oNQuePcvjNSryPLfsxIJZU8amEhir+x5bsKd0ymOXTySzPwFO8o0dpw==",
+    "LicenseType": "expression",
+    "License": "MPL-2.0",
+    "LicenseUrl": "https://licenses.nuget.org/MPL-2.0",
+    "Source": "https://github.com/Blacktempel/DiskInfoToolkit",
+    "SourceCommit": "25319eae5781e75bcf141e844ceab2afe94d40ea",
+    "Copyright": "Florian K."
+  },
+  {
+    "Package": "HidSharp/2.6.4",
+    "Sha512": "UcGvtnXFcatwHBXr+ei8GEXvg//wjGmDGQ6Xvb+7M4vHjURAhSLIJ+dSZv0BnAhQEpNlH8G4P7JxYnMH8Aph4g==",
+    "LicenseType": "file",
+    "License": "LICENSE.txt",
+    "LicenseUrl": "https://aka.ms/deprecateLicenseUrl",
+    "Source": "",
+    "SourceCommit": "",
+    "Copyright": "Copyright 2010-2025 James Bellinger"
+  },
+  {
+    "Package": "LibreHardwareMonitorLib/0.9.6",
+    "Sha512": "W4hQ5Ja51/1cEDZnh9kG5UHFBwjjY2+oIpSUhSsgeYXKRKezrkw3sEFrhQkrOuo53xkXyfWV8ZErMqQuGqWIMQ==",
+    "LicenseType": "expression",
+    "License": "MPL-2.0",
+    "LicenseUrl": "https://licenses.nuget.org/MPL-2.0",
+    "Source": "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor",
+    "SourceCommit": "3d331e3370efb858411f19511373eff65a218701",
+    "Copyright": "LibreHardwareMonitor"
+  },
+  {
+    "Package": "Mono.Posix.NETStandard/1.0.0",
+    "Sha512": "vSN/L1uaVwKsiLa95bYu2SGkF0iY3xMblTfxc8alSziPuVfJpj3geVqHGAA75J7cZkMuKpFVikz82Lo6y6LLdA==",
+    "LicenseType": "",
+    "License": "",
+    "LicenseUrl": "https://go.microsoft.com/fwlink/?linkid=869050",
+    "Source": "",
+    "SourceCommit": "",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "RAMSPDToolkit-NDD/1.4.2",
+    "Sha512": "pqIwn/HqXFnW4FVKybq6gZh3YK14OOLGWkgZzDdewjAInCOu86EO2L+FCQo8j1/v1sKwv+vgX5pnehxyrlJYJw==",
+    "LicenseType": "expression",
+    "License": "MPL-2.0",
+    "LicenseUrl": "https://licenses.nuget.org/MPL-2.0",
+    "Source": "https://github.com/Blacktempel/RAMSPDToolkit",
+    "SourceCommit": "3b47b960e0830fef344624ad5e389675d5f0a1ce",
+    "Copyright": "Florian K."
+  },
+  {
+    "Package": "runtime.android-arm.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "6W4qZX0X7FF+PHM9Kaa5ZsTLcGJAzCU7FB4Tjy1vTg2rUIEjDqijWTtpz8vY6gBzZaG+tD0/EKUyGnfq6d/d/Q==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.android-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "4OdNg2Du1kvm0b4tSErkA4wfH32YmgUqeSLzekk6NdCR61brCp4vttTJl0epZMwbRppXuy/jY7pV0WtP4ymnfQ==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.android-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "nP7xJSDSqRktV4kEd0kr4n0xhzJFuQjh7L/AgrKB3C4QK5TA/8NimJmTl1ogngvnXn2vilH2Hk+keBIvuoGWCA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.android-x86.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "f/neqijoVpgl/PcrXYeLNfCC2t74XYIcaHvtSaF3zaIdJ3hf5wrwRC9gzYLXHRLg/j4DRsCHEw8rlux/dNh7XA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-arm.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "cwiQmy95Zd42K4kMzDt8GkXNKHWDkRZIIyb3MteRrgJKubH2DMA6VY3JiFeR+1hQ7i31Ck+dYyt8wUkElZ/NrQ==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "cEx+Xm0ZNPsuoYTFwXZ6qRstwXQ7vJjbb3jWzo5s5xIeEgpTDdfiUjTgK3Gl618mWgb7+Gn6Vt5pT07RxFC28Q==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-bionic-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "kB21sNzlKgTj3V/LZhnTLFuViiGKtkiUG2GdEW+z3jdeUtRoxqBBXryzMqy0oUOy5idBW2pA6bh+iLGaj+GThA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-bionic-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "/Ud7EYdpnBGJ/x7DdqVFEJOQtEcf9rsD6/1iyUBJNfhhs8JljZLewJHp1cXr1DVCaWWc9jSWIc4g+QpMct/22A==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-musl-arm.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "pBubukkmXD9e4Ju004bEHL3TE5mYahONCVwrJ5b+7/cj8smSY2H5sKTyURiVF1EfX55yORKyTyQ3dALA5yTTlg==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-musl-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "+FR6SvpZya66Wv26MVEK4l2gnjfZnBVUz675eaTcMQ/KWAy+GMaPyhRaBIMnQJf5gfuu3x1qgeAzpmeFkOPGBw==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-musl-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "Ee1XnOSKgeJGBcnd7LLLkyXEbE/JcpQ3pUlbPXqugl0YD55jVubpYebzGYI+ilrnBLCRiV0BR822b2XmerIKGw==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.linux-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "U+Zr1KuBDIIwgR2gTMFbBAtkr4WnKdEXxmknPa3X8Qy6oCi4+MTRmq2zmTh7wxXQXTdmhfXg2tyy7DuVHtB+xQ==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.maccatalyst-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "9yTgh3ZKCBTGEO4YS76g/K15s2qSdeEZDqWteixUPeRsETsuBUwUPF39Fk39OPlRgwhqEuhtHy1Hf6BSOETfAg==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.maccatalyst-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "0gxqUZYQ1T1o5VzgyEMKiSPKJtPbleF2nbjZa5QKZQvPgSlrZFL+FrW4LywIk2scOpXu+Vd5Mv8AGGV7slhYWA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "7U3HW0JzAeg9PWaYBcyWLFMq2RSexgJ8uVCR3E2QVJJ/IZnRT0wYRhyEx3zBSbKYzN3KE6MDiRd6CN4hR7YkqA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.osx-arm64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "qnEjXlIazxaRAhBet0EupWoJQ9PKsXjThpMKGP/ZsCjZgHEb+zs9wft82wY27OagyPOCg9D4hJHWKt5LTbJNZg==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "runtime.osx-x64.runtime.native.System.IO.Ports/10.0.3",
+    "Sha512": "L1gcOL5kcfeeujKQbqJmpeTLsT0c6DeaJ9w6PY9oZ+/WESyya+Zj7StKguXR5j93o3o86FjcN05yufpoCz7R2g==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "System.IO.FileSystem.AccessControl/5.0.0",
+    "Sha512": "SxHB3nuNrpptVk+vZ/F+7OHEpoHUIKKMl02bUmYHQr1r+glbZQxs7pRtsf4ENO29TVm2TH3AEeep2fJcy92oYw==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "git://github.com/dotnet/runtime",
+    "SourceCommit": "cf258a14b70ad9069470a108f13765e0e5988f51",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "System.IO.Ports/10.0.3",
+    "Sha512": "Zs04mZ/dQtaFQ+hpQNDtijBs+6aM9j2fQPp8zNZTfh8DboVNNv7Sw6gH00hT+PVcAhEozlfT+n59Svm6Ug8ROA==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "c2435c3e0f46de784341ac3ed62863ce77e117b4",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  },
+  {
+    "Package": "System.Management/10.0.2",
+    "Sha512": "eFftuy3i844lVKCb4lJvvjKfcvPVcW8KrAdSaIOcRL42/Fisj46hwUs8Bky+4avzMe5Snm5t7aSayOI1mybYXg==",
+    "LicenseType": "expression",
+    "License": "MIT",
+    "LicenseUrl": "https://licenses.nuget.org/MIT",
+    "Source": "https://github.com/dotnet/dotnet",
+    "SourceCommit": "44525024595742ebe09023abe709df51de65009b",
+    "Copyright": "© Microsoft Corporation. All rights reserved."
+  }
+]

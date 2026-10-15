@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Divoom.MacMonitor</AssemblyName>
+    <Version>1.0.0</Version>
+    <UseAppHost>true</UseAppHost>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.22" />
+    <Compile Include="../Models.cs" Link="Shared/Models.cs" />
+    <Compile Include="../Transport.cs" Link="Shared/Transport.cs" />
+    <Compile Include="../Localization.cs" Link="Shared/Localization.cs" />
+    <EmbeddedResource Include="../locales/catalog.json" LogicalName="Divoom.Localization.catalog.json" />
+    <Compile Remove="tests/**/*.cs" />
+    <Content Include="Assets/icon.png" Link="icon.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

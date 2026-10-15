@@ -1,0 +1,14 @@
+.tools/
+bin/
+obj/
+dist/
+artifacts/
+native/bin/
+tests/bin/
+tests/obj/
+.vs/
+*.user
+# Local machine diagnostics and generated run logs are not project sources.
+/VALIDATION.md
+*.log
+.DS_Store
