@@ -1,0 +1,67 @@
+name: Build and publish desktop packages
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag matching the Windows version (for example v1.2.0)
+        required: true
+        type: string
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+concurrency:
+  group: desktop-release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+        with:
+          dotnet-version: '10.0.401'
+      - name: Validate version
+        run: |
+          $taskVersion = ([xml](Get-Content Divoom.HardwareMonitor.csproj -Raw)).Project.PropertyGroup.Version
+          if ($env:RELEASE_TAG -ne "v$taskVersion") { throw 'Release tag must match Windows project version' }
+      - name: Build and test Windows
+        run: ./build.ps1
+      - name: Build and test both Mac architectures
+        run: ./scripts/Package-Mac.ps1
+      - name: Package and publish
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $taskWinVersion = ([xml](Get-Content Divoom.HardwareMonitor.csproj -Raw)).Project.PropertyGroup.Version
+          $taskMacVersion = ([xml](Get-Content macos/Divoom.MacMonitor.csproj -Raw)).Project.PropertyGroup.Version
+          $taskWindowsZip = "dist/DivoomPCMonitor-win-x64-v$taskWinVersion.zip"
+          [IO.Compression.ZipFile]::CreateFromDirectory((Resolve-Path dist/DivoomPCMonitor).Path, (Join-Path (Get-Location).Path $taskWindowsZip), [IO.Compression.CompressionLevel]::Optimal, $true)
+          $taskPackages = @($taskWindowsZip, "dist/DivoomMacMonitor-osx-arm64-v$taskMacVersion.tar.gz", "dist/DivoomMacMonitor-osx-x64-v$taskMacVersion.tar.gz")
+          $taskChecksums = "dist/SHA256SUMS-$env:RELEASE_TAG.txt"
+          $taskPackages | ForEach-Object { $taskHash = (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant(); "$taskHash  $([IO.Path]::GetFileName($_))" } | Set-Content -LiteralPath $taskChecksums -Encoding ascii
+          gh release view $env:RELEASE_TAG --json isDraft
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:RELEASE_TAG --draft --target $env:GITHUB_SHA --title "Windows v$taskWinVersion / macOS v$taskMacVersion beta" --notes-file docs/RELEASE_NOTES.md
+            if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
+          }
+          $taskAssets = $taskPackages + @($taskChecksums)
+          gh release upload $env:RELEASE_TAG @taskAssets --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release upload failed' }
+          $taskReleaseJson = gh api "repos/$env:GH_REPO/releases/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot verify uploaded release' }
+          $taskRelease = $taskReleaseJson | ConvertFrom-Json
+          foreach ($taskFile in $taskAssets) {
+            $taskAsset = $taskRelease.assets | Where-Object name -eq ([IO.Path]::GetFileName($taskFile))
+            $taskExpectedHash = 'sha256:' + (Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash.ToLowerInvariant()
+            if (!$taskAsset -or $taskAsset.state -ne 'uploaded' -or $taskAsset.size -ne (Get-Item -LiteralPath $taskFile).Length -or $taskAsset.digest -ne $taskExpectedHash) { throw "Asset verification failed: $taskFile" }
+          }
+          gh release edit $env:RELEASE_TAG --draft=false --latest --target $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }
