@@ -55,9 +55,9 @@ jobs:
           $taskAssets = $taskPackages + @($taskChecksums)
           gh release upload $env:RELEASE_TAG @taskAssets --clobber
           if ($LASTEXITCODE -ne 0) { throw 'Release upload failed' }
-          $taskReleaseJson = gh api "repos/$env:GH_REPO/releases/tags/$env:RELEASE_TAG"
+          $taskReleaseJson = gh api "repos/$env:GH_REPO/releases?per_page=100"
           if ($LASTEXITCODE -ne 0) { throw 'Cannot verify uploaded release' }
-          $taskRelease = $taskReleaseJson | ConvertFrom-Json
+          $taskRelease = ($taskReleaseJson | ConvertFrom-Json) | Where-Object tag_name -eq $env:RELEASE_TAG
           foreach ($taskFile in $taskAssets) {
             $taskAsset = $taskRelease.assets | Where-Object name -eq ([IO.Path]::GetFileName($taskFile))
             $taskExpectedHash = 'sha256:' + (Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash.ToLowerInvariant()
