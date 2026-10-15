@@ -11,6 +11,7 @@ dotnet run --project "$task_root/macos/tests/Mac.Tests.csproj" -c Release
 dotnet publish "$task_root/macos/Divoom.MacMonitor.csproj" -c Release -r "$task_rid" --self-contained true -o "$task_bundle/Contents/MacOS"
 cp "$task_root/macos/Assets/icon.icns" "$task_bundle/Contents/Resources/"
 cp "$task_root/macos/README.md" "$task_destination/README.md"
+cp "$task_root/macos/README.en.md" "$task_destination/README.en.md"
 task_cache="$(dotnet nuget locals global-packages --list | sed 's/^[^:]*: //')"
 mkdir -p "$task_bundle/Contents/Resources/licenses"
 for task_package_dir in "$task_cache"/avalonia*/* "$task_cache"/skiasharp*/* "$task_cache"/harfbuzzsharp*/* "$task_cache"/microcom.runtime/* "$task_cache"/tmds.dbus.protocol/* "$task_cache"/microsoft.netcore.app.runtime."$task_rid"/*; do
@@ -53,5 +54,5 @@ if [ -n "${NOTARY_PROFILE:-}" ]; then
     xcrun notarytool submit "$task_destination/notarize.zip" --keychain-profile "$NOTARY_PROFILE" --wait
     xcrun stapler staple "$task_bundle"
 fi
-tar -czf "$task_destination.tar.gz" -C "$task_destination" DivoomMacMonitor.app README.md
+tar -czf "$task_destination.tar.gz" -C "$task_destination" DivoomMacMonitor.app README.md README.en.md
 echo "Ready: $task_destination.tar.gz"

@@ -35,7 +35,9 @@ if (!$SkipNative) {
     $taskCommit = '32b5a740d42295c5dfe9026b9f52683da0f3af91'
     $taskHeaders = Join-Path $PSScriptRoot '.tools\adlx'
     New-Item -ItemType Directory -Path $taskHeaders -Force | Out-Null
-    $taskRemoteFiles = Invoke-RestMethod "https://api.github.com/repos/GPUOpen-LibrariesAndSDKs/ADLX/contents/SDK/Include?ref=$taskCommit"
+    $taskGitHubHeaders = @{ Accept = 'application/vnd.github+json' }
+    if ($env:GH_TOKEN) { $taskGitHubHeaders.Authorization = 'Bearer ' + $env:GH_TOKEN }
+    $taskRemoteFiles = Invoke-RestMethod "https://api.github.com/repos/GPUOpen-LibrariesAndSDKs/ADLX/contents/SDK/Include?ref=$taskCommit" -Headers $taskGitHubHeaders
     foreach ($taskFile in $taskRemoteFiles) {
         $taskDestination = Join-Path $taskHeaders $taskFile.name
         if (!(Test-Path -LiteralPath $taskDestination)) { Invoke-WebRequest $taskFile.download_url -OutFile $taskDestination }
@@ -59,6 +61,7 @@ if (!$TestOnly) {
     $taskDotnetCommand = Get-Command $taskDotnet
     & (Join-Path $PSScriptRoot 'scripts\Collect-Licenses.ps1') -DotnetRoot (Split-Path $taskDotnetCommand.Source)
     if (Test-Path -LiteralPath 'README.md') { Copy-Item -LiteralPath 'README.md' -Destination 'dist\DivoomPCMonitor\README.md' }
+    if (Test-Path -LiteralPath 'README.en.md') { Copy-Item -LiteralPath 'README.en.md' -Destination 'dist\DivoomPCMonitor\README.en.md' }
     if (Test-Path -LiteralPath 'THIRD_PARTY_NOTICES.md') { Copy-Item -LiteralPath 'THIRD_PARTY_NOTICES.md' -Destination 'dist\DivoomPCMonitor\THIRD_PARTY_NOTICES.md' }
     if (Test-Path -LiteralPath 'docs\VALIDATION.md') { Copy-Item -LiteralPath 'docs\VALIDATION.md' -Destination 'dist\DivoomPCMonitor\VALIDATION.md' }
     if (Test-Path -LiteralPath 'docs') { Copy-Item -LiteralPath 'docs' -Destination 'dist\DivoomPCMonitor' -Recurse -Force }

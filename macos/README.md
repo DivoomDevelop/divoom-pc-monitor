@@ -1,5 +1,7 @@
 # Divoom Mac Monitor
 
+[简体中文](README.md) | [English](README.en.md)
+
 macOS 桌面硬件监控，分别提供 Apple 芯片 `osx-arm64` 和 Intel `osx-x64` 自包含版本，不需要另装 .NET。技术最低版本 macOS 14；建议使用仍受 Apple/.NET 支持的 macOS 版本。当前 Windows 环境只验证了构建、离线解析和共享协议，尚未完成 Mac 实机验证、Developer ID 签名与公证，属于测试版本。
 
 ## 使用

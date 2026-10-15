@@ -45,6 +45,7 @@ foreach ($taskRid in $taskRuntimes) {
     [IO.File]::WriteAllText((Join-Path $taskBundle 'Contents/Info.plist'), $taskInfo.Replace('__VERSION__', $taskVersion), [Text.UTF8Encoding]::new($false))
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/Assets/icon.icns') -Destination $taskResources
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/README.md') -Destination (Join-Path $taskContainer 'README.md')
+    Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/README.en.md') -Destination (Join-Path $taskContainer 'README.en.md')
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/entitlements.plist') -Destination $taskContainer
     # Include package licenses; Windows monitoring libraries and smartctl.exe are not shipped in the Mac bundle.
     $taskLicenseDirectory = Join-Path $taskResources 'licenses'

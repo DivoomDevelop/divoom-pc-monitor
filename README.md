@@ -1,5 +1,7 @@
 # Divoom PC 硬件监控
 
+[简体中文](README.md) | [English](README.en.md)
+
 Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接设备或访问云端。
 
 新增 macOS 测试版，分别提供 Apple 芯片与 Intel 芯片版本，复用 Windows 的设备通信代码。使用、温度支持范围、构建及签名流程见 [macos/README.md](macos/README.md)。Windows 当前版 v1.2.0，macOS 测试版 v1.0.1。
