@@ -41,7 +41,7 @@ public sealed class MainWindow : Window
     public MainWindow(IClassicDesktopStyleApplicationLifetime desktop, bool preview = false)
     {
         _desktop = desktop; _sender = new(_transport, () => _monitor.Current);
-        Title = "Divoom / Mac 硬件监控 v1.0.0"; Width = 1120; Height = 830; MinWidth = 980; MinHeight = 700;
+        Title = "Divoom / Mac 硬件监控 v" + typeof(MainWindow).Assembly.GetName().Version?.ToString(3); Width = 1120; Height = 830; MinWidth = 980; MinHeight = 700;
         Background = Brush.Parse("#F4F7FB"); Padding = new Thickness(24);
         RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
         var root = new Grid { RowDefinitions = new("Auto,*,Auto"), RowSpacing = 16 };
@@ -206,6 +206,7 @@ public sealed class MainWindow : Window
     }
     private void UpdateEndpoint()
     {
+        _lcd.IsVisible = _independent.IsVisible = (int)(_hardware.Value ?? 0) is 400 or 402;
         try { var target = new DeviceTarget(_ip.Text ?? "", (int)(_deviceId.Value ?? 0), Math.Max(0, _lcd.SelectedIndex), _independent.IsChecked == true ? 1 : 0, (int)(_hardware.Value ?? 0)); _endpoint.Text = target.PostUri.ToString(); }
         catch (ArgumentException e) { _endpoint.Text = e.Message; }
     }

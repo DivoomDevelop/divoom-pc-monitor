@@ -28,8 +28,8 @@ cat > "$task_bundle/Contents/Info.plist" <<'PLIST'
 <key>CFBundleExecutable</key><string>Divoom.MacMonitor</string>
 <key>CFBundleIdentifier</key><string>com.divoom.macmonitor</string>
 <key>CFBundleName</key><string>Divoom Mac Monitor</string>
-<key>CFBundleShortVersionString</key><string>1.0.0</string>
-<key>CFBundleVersion</key><string>1.0.0</string>
+<key>CFBundleShortVersionString</key><string>1.0.1</string>
+<key>CFBundleVersion</key><string>1.0.1</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleIconFile</key><string>icon.icns</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>

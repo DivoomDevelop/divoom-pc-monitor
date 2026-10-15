@@ -2,7 +2,19 @@
 
 Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接设备或访问云端。
 
-新增 macOS 测试版，分别提供 Apple 芯片与 Intel 芯片版本，复用 Windows 的设备通信代码。使用、温度支持范围、构建及签名流程见 [macos/README.md](macos/README.md)。Windows 当前版 v1.1.1。
+新增 macOS 测试版，分别提供 Apple 芯片与 Intel 芯片版本，复用 Windows 的设备通信代码。使用、温度支持范围、构建及签名流程见 [macos/README.md](macos/README.md)。Windows 当前版 v1.2.0，macOS 测试版 v1.0.1。
+
+## 下载即用
+
+无需编译，下载对应系统的软件包并完整解压。所有下载集中在 [GitHub Releases](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/latest)，源码 ZIP 不包含可执行程序。
+
+| 系统 | 下载 | 使用 |
+| --- | --- | --- |
+| Windows 10/11 x64 | [Windows 免安装包 v1.2.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomPCMonitor-win-x64-v1.2.0.zip) | 解压后运行 `DivoomPCMonitor/Divoom.HardwareMonitor.exe`，保留整个目录 |
+| macOS 14+ Apple 芯片 | [Apple 芯片测试包 v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-arm64-v1.0.1.tar.gz) | 解压后将 `.app` 拷贝到“应用程序” |
+| macOS 14+ Intel 芯片 | [Intel 芯片测试包 v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-x64-v1.0.1.tar.gz) | 解压后将 `.app` 拷贝到“应用程序” |
+
+发布包自带 .NET 运行时。macOS 包尚未完成 Developer ID 签名、公证及 Mac 实机验收，可能被 Gatekeeper 阻止，详见 [Mac 使用说明](macos/README.md)。Release 同时提供 SHA-256 校验文件。
 
 ## 使用
 
@@ -11,7 +23,7 @@ Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接�
 - 主面板显示 CPU/GPU 型号、使用率、温度、内存占用、物理磁盘活动率和温度、本地卷容量占用。
 - 默认选择独立显卡和系统盘；可在“发送显卡/硬盘”选择数据来源。
 - 点击“刷新设备”读取设备列表并自动填写 Hardware 型号，或手动填写设备 IPv4 地址及 Hardware。90、92、400 使用 80 端口，其它型号使用 9000 端口；界面显示当前接口并保存型号设置。
-- TimeGate 用户勾选“五屏”，选择 LCD 1–5 以及独立/联动模式。联网设备列表可自动读取模式，手动 IP 可完全离线设置。
+- 只有 Hardware 为 400、402 时显示 TimeGate 五屏、LCD 1–5 和独立模式选项；其它型号隐藏并收起该区域。联网设备列表可自动读取模式，手动 IP 可完全离线设置。
 - 点击“开始发送”时，90/92/96/400/402 切换到表盘 625，530 切换到表盘 3191，其它型号不发送切换表盘命令；随后每两秒发送 PC 数据。停止发送不停止本机监控。
 - 关闭窗口隐藏到托盘，双击托盘恢复。彻底退出请使用托盘菜单“退出”。默认不启用开机启动，不自动恢复发送。
 - 首次启动跟随系统语言，不匹配时使用英语；中文区分简体/繁体。采集设置提供“跟随系统”及 19 种语言，保存后重启生效：英语、简体中文、繁体中文、日语、德语、泰语、俄语、韩语、越南语、法语、土耳其语、西班牙语、葡萄牙语、印尼语、意大利语、乌克兰语、瑞典语、丹麦语、波兰语。产品界面/状态使用语言资源；硬件型号、命令标识、系统/设备原始错误及诊断内容保留原文。

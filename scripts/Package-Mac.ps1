@@ -1,6 +1,7 @@
 param([ValidateSet('osx-arm64','osx-x64','both')][string]$Runtime = 'both', [switch]$SkipTests, [switch]$Offline)
 $ErrorActionPreference = 'Stop'
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$taskVersion = ([xml](Get-Content -LiteralPath (Join-Path $taskRoot 'macos/Divoom.MacMonitor.csproj') -Raw)).Project.PropertyGroup.Version
 $taskDotnet = Join-Path $taskRoot '.tools/dotnet/dotnet.exe'
 if (!(Test-Path -LiteralPath $taskDotnet)) { $taskDotnet = 'dotnet' }
 # Offline revocation lookup keeps NuGet signature checks bounded on restricted networks.
@@ -11,7 +12,7 @@ if (!$SkipTests) {
 }
 $taskRuntimes = if ($Runtime -eq 'both') { @('osx-arm64','osx-x64') } else { @($Runtime) }
 foreach ($taskRid in $taskRuntimes) {
-    $taskContainer = Join-Path $taskRoot ('dist/DivoomMacMonitor-' + $taskRid)
+    $taskContainer = Join-Path $taskRoot ('dist/DivoomMacMonitor-' + $taskRid + '-v' + $taskVersion)
     $taskBundle = Join-Path $taskContainer 'DivoomMacMonitor.app'
     $taskExecutableDirectory = Join-Path $taskBundle 'Contents/MacOS'
     $taskResources = Join-Path $taskBundle 'Contents/Resources'
@@ -31,8 +32,8 @@ foreach ($taskRid in $taskRuntimes) {
 <key>CFBundleIdentifier</key><string>com.divoom.macmonitor</string>
 <key>CFBundleName</key><string>Divoom Mac Monitor</string>
 <key>CFBundleDisplayName</key><string>Divoom Mac Monitor</string>
-<key>CFBundleShortVersionString</key><string>1.0.0</string>
-<key>CFBundleVersion</key><string>1.0.0</string>
+<key>CFBundleShortVersionString</key><string>__VERSION__</string>
+<key>CFBundleVersion</key><string>__VERSION__</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleIconFile</key><string>icon.icns</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
@@ -41,7 +42,7 @@ foreach ($taskRid in $taskRuntimes) {
 <key>NSAppTransportSecurity</key><dict><key>NSAllowsLocalNetworking</key><true/></dict>
 </dict></plist>
 '@
-    [IO.File]::WriteAllText((Join-Path $taskBundle 'Contents/Info.plist'), $taskInfo, [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText((Join-Path $taskBundle 'Contents/Info.plist'), $taskInfo.Replace('__VERSION__', $taskVersion), [Text.UTF8Encoding]::new($false))
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/Assets/icon.icns') -Destination $taskResources
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/README.md') -Destination (Join-Path $taskContainer 'README.md')
     Copy-Item -LiteralPath (Join-Path $taskRoot 'macos/entitlements.plist') -Destination $taskContainer
@@ -69,7 +70,7 @@ foreach ($taskRid in $taskRuntimes) {
             }
         }
     }
-    $taskArchive = Join-Path $taskRoot ("dist/DivoomMacMonitor-$taskRid-v1.0.0.tar.gz")
+    $taskArchive = Join-Path $taskRoot ("dist/DivoomMacMonitor-$taskRid-v$taskVersion.tar.gz")
     if (Test-Path -LiteralPath $taskArchive) { throw "Archive exists: $taskArchive" }
     # Explicit Unix modes avoid losing executable permissions when packaging on Windows.
     Add-Type -AssemblyName System.Formats.Tar

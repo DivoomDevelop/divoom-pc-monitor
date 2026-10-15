@@ -41,8 +41,8 @@ public sealed class MainForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         Icon = SystemIcons.Application;
         _sender = new(_transport, () => _monitor.Current);
-        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new(20), ColumnCount = 1, RowCount = 3 };
-        root.RowStyles.Add(new(SizeType.Absolute, 66)); root.RowStyles.Add(new(SizeType.Percent, 100)); root.RowStyles.Add(new(SizeType.Absolute, 34));
+        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new(16), ColumnCount = 1, RowCount = 3 };
+        root.RowStyles.Add(new(SizeType.Absolute, 58)); root.RowStyles.Add(new(SizeType.Percent, 100)); root.RowStyles.Add(new(SizeType.Absolute, 28));
         var title = new Label { Text = "Divoom  /  PC 硬件监控", Dock = DockStyle.Fill, Font = new("Microsoft YaHei UI", 23, FontStyle.Bold), ForeColor = Color.FromArgb(24, 39, 64), TextAlign = ContentAlignment.MiddleLeft };
         var tabs = new TabControl { Dock = DockStyle.Fill };
         tabs.TabPages.Add(MonitorPage()); tabs.TabPages.Add(SettingsPage()); tabs.TabPages.Add(DiagnosticPage());
@@ -54,7 +54,7 @@ public sealed class MainForm : Form
         menu.Items.Add("退出", null, (_, _) => { _exit = true; Close(); });
         _tray = new NotifyIcon { Icon = SystemIcons.Application, Text = "Divoom PC 硬件监控", Visible = true, ContextMenuStrip = menu };
         _tray.DoubleClick += (_, _) => RestoreWindow();
-        _ip.Text = _settings.DeviceIp; _timeGate.Checked = _settings.TimeGate || _settings.DeviceHardware is 400 or 402; _independent.Checked = _settings.LcdIndependence == 1;
+        _ip.Text = _settings.DeviceIp; _timeGate.Checked = _settings.DeviceHardware is 400 or 402; _independent.Checked = _settings.LcdIndependence == 1;
         _hardware.Value = Math.Max(0, _settings.DeviceHardware);
         _deviceId.Value = Math.Max(0, _settings.DeviceId);
         _ip.TextChanged += (_, _) => { _deviceId.Value = 0; _localToken.Clear(); };
@@ -85,13 +85,12 @@ public sealed class MainForm : Form
     private static void ApplyLanguage(Control control)
     {
         if (control is (Label or System.Windows.Forms.Button or TabPage or GroupBox or CheckBox or Form) && control.Tag as string is not ("HardwareName" or "RawDiagnostic")) control.Text = Localizer.Ui(control.Text);
-        if (control is Button button) { button.AutoSize = true; button.AutoSizeMode = AutoSizeMode.GrowAndShrink; button.MinimumSize = new Size(0, 34); button.Padding = new Padding(8, 0, 8, 0); }
         if (control is TextBox box && !box.ReadOnly) box.PlaceholderText = Localizer.Ui(box.PlaceholderText);
         if (control is DataGridView grid) foreach (DataGridViewColumn column in grid.Columns) column.HeaderText = Localizer.Ui(column.HeaderText);
         foreach (Control child in control.Controls) ApplyLanguage(child);
     }
     private static ComboBox Combo(int width) => new() { Width = width, DropDownStyle = ComboBoxStyle.DropDownList };
-    private static Button Button(string text, int width = 150) => new() { Text = text, Width = width, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.White, Margin = new(4) };
+    private static Button Button(string text, int width = 150) => new() { Text = text, Width = width, Height = 34, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, MinimumSize = new(0, 34), Padding = new(8, 0, 8, 0), FlatStyle = FlatStyle.Flat, BackColor = Color.White, Margin = new(4) };
     private static FlowLayoutPanel Row(params Control[] children)
     {
         var row = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new(0, 5, 0, 3), WrapContents = true };
@@ -100,27 +99,101 @@ public sealed class MainForm : Form
     }
     private TabPage MonitorPage()
     {
-        var page = new TabPage("实时监控") { BackColor = BackColor, Padding = new(12) };
-        var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 5 };
-        body.RowStyles.Add(new(SizeType.Absolute, 176)); body.RowStyles.Add(new(SizeType.AutoSize)); body.RowStyles.Add(new(SizeType.Percent, 100)); body.RowStyles.Add(new(SizeType.AutoSize)); body.RowStyles.Add(new(SizeType.AutoSize));
-        var cards = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1 };
+        var page = new TabPage("实时监控") { BackColor = BackColor, Padding = new(8) };
+        // Bounded rows keep the disk table visible. Never combine an auto-sized
+        // connection panel with a percentage-height sibling: their preferred sizes cycle.
+        var body = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 1, RowCount = 3 };
+        body.RowStyles.Add(new(SizeType.Absolute, 164)); body.RowStyles.Add(new(SizeType.Percent, 100)); body.RowStyles.Add(new(SizeType.Absolute, 38));
+        var cards = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 4, RowCount = 1 };
         for (int i = 0; i < 4; i++) cards.ColumnStyles.Add(new(SizeType.Percent, 25));
         cards.Controls.Add(_cpuCard, 0, 0); cards.Controls.Add(_gpuCard, 1, 0); cards.Controls.Add(_memoryCard, 2, 0); cards.Controls.Add(_diskCard, 3, 0);
         body.Controls.Add(cards, 0, 0);
-        body.Controls.Add(Row(new Label { Text = "发送显卡", AutoSize = true }, _gpu, new Label { Text = "发送硬盘", AutoSize = true }, _disk), 0, 1);
+
+        Label Caption(string text) => new() { Text = text, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, AutoEllipsis = true, Margin = new(3), ForeColor = Color.FromArgb(45, 58, 79) };
+        TableLayoutPanel Line(params Control[] controls)
+        {
+            var line = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = controls.Length, RowCount = 1 };
+            foreach (var control in controls)
+            {
+                line.ColumnStyles.Add(new(SizeType.Percent, 100f / controls.Length));
+                control.Margin = new(3);
+                if (control is TextBox or ComboBox or NumericUpDown) control.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                else { control.Dock = DockStyle.Fill; control.AutoSize = false; }
+                line.Controls.Add(control);
+            }
+            return line;
+        }
+        TableLayoutPanel Field(string label, Control input)
+        {
+            var line = Line(Caption(label), input);
+            line.ColumnStyles.Clear(); line.ColumnStyles.Add(new(SizeType.Absolute, 105)); line.ColumnStyles.Add(new(SizeType.Percent, 100));
+            return line;
+        }
+        var lower = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 2, RowCount = 1 };
+        lower.ColumnStyles.Add(new(SizeType.Percent, 100)); lower.ColumnStyles.Add(new(SizeType.Absolute, 400));
+        var storage = new TableLayoutPanel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new(12), Margin = new(5, 8, 5, 0), ColumnCount = 1, RowCount = 3 };
+        storage.RowStyles.Add(new(SizeType.Absolute, 42)); storage.RowStyles.Add(new(SizeType.Absolute, 42)); storage.RowStyles.Add(new(SizeType.Percent, 100));
+        storage.Controls.Add(Field("发送显卡", _gpu), 0, 0); storage.Controls.Add(Field("发送硬盘", _disk), 0, 1);
         foreach (string heading in new[] { "磁盘 / 卷", "型号 / 容量", "容量占用", "活动率", "温度" }) _diskGrid.Columns.Add(heading, heading);
-        _diskGrid.Columns[0].FillWeight = 70; _diskGrid.Columns[1].FillWeight = 230;
-        body.Controls.Add(_diskGrid, 0, 2);
-        var connection = new GroupBox { Text = "局域网设备", Dock = DockStyle.Fill, Padding = new(8), AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
-        var connectionRows = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 1, RowCount = 4 };
+        _diskGrid.Columns[0].FillWeight = 90; _diskGrid.Columns[1].FillWeight = 190;
+        _diskGrid.Font = new(Font.FontFamily, 9);
+        _diskGrid.EnableHeadersVisualStyles = false;
+        _diskGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(238, 243, 249);
+        _diskGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(24, 39, 64);
+        _diskGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        _diskGrid.DefaultCellStyle.Padding = new(3);
+        _diskGrid.RowTemplate.Height = 30;
+        _diskGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 253);
+        _diskGrid.GridColor = Color.FromArgb(226, 232, 240);
+        _diskGrid.Margin = new(3, 10, 3, 3);
+        storage.Controls.Add(_diskGrid, 0, 2); lower.Controls.Add(storage, 0, 0);
+
+        var connection = new TableLayoutPanel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new(12), Margin = new(5, 8, 5, 0), ColumnCount = 1, RowCount = 2 };
+        connection.ColumnStyles.Add(new(SizeType.Percent, 100));
+        connection.RowStyles.Add(new(SizeType.Percent, 100)); connection.RowStyles.Add(new(SizeType.Absolute, 46));
+        var connectionScroll = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Margin = Padding.Empty };
+        var connectionRows = new TableLayoutPanel { Dock = DockStyle.Top, Height = 328, Margin = Padding.Empty, ColumnCount = 1, RowCount = 9 };
         connectionRows.ColumnStyles.Add(new(SizeType.Percent, 100));
-        for (int i = 0; i < 4; i++) connectionRows.RowStyles.Add(new(SizeType.AutoSize));
-        connectionRows.Controls.Add(Row(_discover, _devices, new Label { Text = "设备 IP", AutoSize = true }, _ip, _start), 0, 0);
-        connectionRows.Controls.Add(Row(_timeGate, _lcd, _independent), 0, 1);
-        connectionRows.Controls.Add(Row(new Label { Text = "LocalToken", AutoSize = true }, _localToken,
-            new Label { Text = "APP → Wi-Fi 设备 → 设置 → 本地令牌", AutoSize = true }), 0, 3);
-        connectionRows.Controls.Add(Row(new Label { Text = "Hardware", AutoSize = true }, _hardware, new Label { Text = "DeviceId", AutoSize = true }, _deviceId, _endpoint), 0, 2);
-        connection.Controls.Add(connectionRows); body.Controls.Add(connection, 0, 3); body.Controls.Add(_status, 0, 4); page.Controls.Add(body);
+        foreach (int height in new[] { 40, 38, 38, 38, 24, 38, 44, 32, 36 }) connectionRows.RowStyles.Add(new(SizeType.Absolute, height));
+        var connectionTitle = Caption("局域网设备"); connectionTitle.Font = new(Font, FontStyle.Bold);
+        var header = Line(connectionTitle, _discover);
+        header.ColumnStyles.Clear(); header.ColumnStyles.Add(new(SizeType.Percent, 100)); header.ColumnStyles.Add(new(SizeType.Absolute, 132));
+        connectionRows.Controls.Add(header, 0, 0);
+        connectionRows.Controls.Add(Line(_devices), 0, 1);
+        connectionRows.Controls.Add(Field("设备 IP", _ip), 0, 2);
+        var identity = Line(Caption("Hardware"), _hardware, Caption("DeviceId"), _deviceId);
+        identity.Font = new(Font.FontFamily, 9);
+        identity.ColumnStyles.Clear();
+        foreach (int width in new[] { 80, 60, 68 }) identity.ColumnStyles.Add(new(SizeType.Absolute, width));
+        identity.ColumnStyles.Add(new(SizeType.Percent, 100));
+        connectionRows.Controls.Add(identity, 0, 3);
+        _endpoint.Dock = DockStyle.Fill; _endpoint.AutoSize = false; _endpoint.TextAlign = ContentAlignment.MiddleLeft; _endpoint.Margin = new(3); _endpoint.Font = new(Font.FontFamily, 9);
+        connectionRows.Controls.Add(_endpoint, 0, 4);
+        connectionRows.Controls.Add(Field("LocalToken", _localToken), 0, 5);
+        var help = Caption("APP → Wi-Fi 设备 → 设置 → 本地令牌"); help.Font = new(Font.FontFamily, 9); help.ForeColor = Color.SlateGray;
+        help.AutoEllipsis = false;
+        connectionRows.Controls.Add(help, 0, 6);
+        var timeGateMode = Line(_timeGate);
+        connectionRows.Controls.Add(timeGateMode, 0, 7);
+        var lcdMode = Line(_lcd, _independent);
+        lcdMode.ColumnStyles.Clear(); lcdMode.ColumnStyles.Add(new(SizeType.Absolute, 100)); lcdMode.ColumnStyles.Add(new(SizeType.Percent, 100));
+        connectionRows.Controls.Add(lcdMode, 0, 8);
+        void UpdateTimeGateLayout()
+        {
+            bool visible = (int)_hardware.Value is 400 or 402;
+            float scale = connectionRows.RowStyles[0].Height / 40f;
+            timeGateMode.Visible = lcdMode.Visible = visible;
+            connectionRows.RowStyles[7].Height = visible ? 32 * scale : 0;
+            connectionRows.RowStyles[8].Height = visible ? 36 * scale : 0;
+            connectionRows.Height = (int)Math.Ceiling(connectionRows.RowStyles.Cast<RowStyle>().Sum(row => row.Height));
+        }
+        _hardware.ValueChanged += (_, _) => UpdateTimeGateLayout();
+        UpdateTimeGateLayout();
+        _start.BackColor = Color.FromArgb(28, 112, 224); _start.ForeColor = Color.White; _start.FlatAppearance.BorderSize = 0;
+        connectionScroll.Controls.Add(connectionRows); connection.Controls.Add(connectionScroll, 0, 0);
+        connection.Controls.Add(Line(_start), 0, 1); lower.Controls.Add(connection, 1, 0); body.Controls.Add(lower, 0, 1);
+        _status.Dock = DockStyle.Fill; _status.AutoSize = false; _status.AutoEllipsis = true; _status.Margin = new(5, 3, 5, 0);
+        body.Controls.Add(_status, 0, 2); page.Controls.Add(body);
         return page;
     }
     private TabPage SettingsPage()

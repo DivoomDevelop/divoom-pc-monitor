@@ -60,6 +60,7 @@ if (!$TestOnly) {
     & (Join-Path $PSScriptRoot 'scripts\Collect-Licenses.ps1') -DotnetRoot (Split-Path $taskDotnetCommand.Source)
     if (Test-Path -LiteralPath 'README.md') { Copy-Item -LiteralPath 'README.md' -Destination 'dist\DivoomPCMonitor\README.md' }
     if (Test-Path -LiteralPath 'THIRD_PARTY_NOTICES.md') { Copy-Item -LiteralPath 'THIRD_PARTY_NOTICES.md' -Destination 'dist\DivoomPCMonitor\THIRD_PARTY_NOTICES.md' }
+    if (Test-Path -LiteralPath 'docs\VALIDATION.md') { Copy-Item -LiteralPath 'docs\VALIDATION.md' -Destination 'dist\DivoomPCMonitor\VALIDATION.md' }
     if (Test-Path -LiteralPath 'docs') { Copy-Item -LiteralPath 'docs' -Destination 'dist\DivoomPCMonitor' -Recurse -Force }
     if (Test-Path -LiteralPath 'licenses') { Copy-Item -LiteralPath 'licenses' -Destination 'dist\DivoomPCMonitor' -Recurse -Force }
     Write-Output 'Ready: dist\DivoomPCMonitor\Divoom.HardwareMonitor.exe'
