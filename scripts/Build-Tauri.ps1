@@ -64,7 +64,7 @@ try {
     if (!$env:CARGO_BUILD_JOBS) { $env:CARGO_BUILD_JOBS='2' }
     $taskArguments=@('run','tauri','--','build')
     if ($NoBundle) { $taskArguments+='--no-bundle' }
-    else { $taskArguments+=@('--bundles',$(if ($IsWindows) { 'nsis' } else { 'dmg' })) }
+    else { $taskArguments+=@('--bundles',$(if ($IsWindows) { 'nsis' } else { 'app,dmg' })) }
     if ($DebugBuild) { $taskArguments+='--debug' }
     $taskArguments+=@('--','--locked')
     & $taskNpm @taskArguments
