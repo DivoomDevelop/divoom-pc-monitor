@@ -115,13 +115,22 @@ jobs:
           $ErrorActionPreference='Stop'
           $taskVersion=(Get-Content desktop/src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
           if ($env:RELEASE_TAG -ne "v$taskVersion") { throw 'Tag and package source version differ' }
+          $taskRefJson=gh api "repos/$env:GH_REPO/git/ref/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Create the version tag as a maintainer, then retry publication with build_run_id' }
+          $taskObject=($taskRefJson | ConvertFrom-Json).object
+          for ($taskDepth=0; $taskObject.type -eq 'tag' -and $taskDepth -lt 8; $taskDepth++) {
+            $taskTagJson=gh api "repos/$env:GH_REPO/git/tags/$($taskObject.sha)"
+            if ($LASTEXITCODE -ne 0) { throw 'Annotated tag lookup failed' }
+            $taskObject=($taskTagJson | ConvertFrom-Json).object
+          }
+          if ($taskObject.type -ne 'commit' -or $taskObject.sha -ne $env:SOURCE_SHA) { throw 'Version tag must match the commit that produced these packages' }
           $taskFiles=Get-ChildItem -LiteralPath packages -Recurse -File
           if ($taskFiles.Count -ne 4) { throw 'Expected Windows installer, portable ZIP and two Mac DMGs' }
           $taskChecksums="packages/SHA256SUMS-$env:RELEASE_TAG.txt"
           $taskFiles | Sort-Object Name | ForEach-Object { "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)" } | Set-Content -LiteralPath $taskChecksums -Encoding ascii
           gh release view $env:RELEASE_TAG --json isDraft
           if ($LASTEXITCODE -ne 0) {
-            gh release create $env:RELEASE_TAG --draft --target $env:SOURCE_SHA --title "Divoom PC Monitor $env:RELEASE_TAG (Tauri)" --notes-file "docs/releases/$env:RELEASE_TAG.md"
+            gh release create $env:RELEASE_TAG --draft --verify-tag --title "Divoom PC Monitor $env:RELEASE_TAG (Tauri)" --notes-file "docs/releases/$env:RELEASE_TAG.md"
             if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
           }
           $taskAssets=@((Get-ChildItem -LiteralPath packages -Recurse -File).FullName)
@@ -135,5 +144,5 @@ jobs:
             $taskDigest='sha256:'+(Get-FileHash -LiteralPath $taskFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             if (!$taskAsset -or $taskAsset.state -ne 'uploaded' -or $taskAsset.size -ne $taskFile.Length -or $taskAsset.digest -ne $taskDigest) { throw "Verification failed: $($taskFile.Name)" }
           }
-          gh release edit $env:RELEASE_TAG --draft=false --latest --target $env:SOURCE_SHA --notes-file "docs/releases/$env:RELEASE_TAG.md"
+          gh release edit $env:RELEASE_TAG --draft=false --latest --notes-file "docs/releases/$env:RELEASE_TAG.md"
           if ($LASTEXITCODE -ne 0) { throw 'Publication failed' }
