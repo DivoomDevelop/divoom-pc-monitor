@@ -2,13 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-A macOS hardware monitor with separate self-contained Apple Silicon (`osx-arm64`) and Intel (`osx-x64`) packages. No separate .NET installation is needed. The technical minimum is macOS 14; use a macOS release still supported by Apple and .NET.
+A macOS hardware monitor with separate Apple Silicon and Intel packages. Version 1.3.0 uses a Tauri 2 interface and DMG installers with the C# sensor backend and .NET runtime included. The technical minimum is macOS 14.
 
 This is a beta. Windows cross-builds, offline parsers and the shared protocol have been checked. Physical-Mac testing, Developer ID signing and notarization have not been completed.
 
 ## Download and run
 
-Download the matching architecture from [GitHub Releases](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/latest). Extract the `.tar.gz`, copy `DivoomMacMonitor.app` to Applications and open it. Packages preserve executable permissions. Gatekeeper may block unsigned beta packages. Formal distribution should use the signing and notarization procedure below; disabling system security is not required.
+Download the DMG for your architecture from [GitHub Releases](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/latest), then drag `DivoomPCMonitor.app` into Applications. Test packages use ad-hoc signatures and have not completed Developer ID signing or notarization; Gatekeeper may block them.
+
+The device card always shows the same-local-network requirement. See the [Tauri build guide](../docs/TAURI.md) for the current packaging flow and backend layout. The `Package-Mac.ps1` and `build-macos.sh` commands below remain available for the legacy native interface and backend; use `scripts/Build-Tauri.ps1` for current application bundles.
 
 ## Metrics
 
@@ -30,7 +32,7 @@ LocalToken is optional. Find it in **Divoom APP → Wi-Fi device list → Settin
 
 ## Language and logs
 
-The first launch follows the system language, falling back to English. Settings supports system language or English, Simplified Chinese, Traditional Chinese, Japanese, German, Thai, Russian, Korean, Vietnamese, French, Turkish, Spanish, Portuguese, Indonesian, Italian, Ukrainian, Swedish, Danish and Polish. Save and restart to apply changes. Hardware names, protocol identifiers and original errors retain their original text.
+The first launch follows the system language, falling back to English. Settings supports system language or English, Simplified Chinese, Traditional Chinese, Japanese, German, Thai, Russian, Korean, Vietnamese, French, Turkish, Spanish, Portuguese, Indonesian, Italian, Ukrainian, Swedish, Danish and Polish. Language changes apply immediately after saving in the Tauri interface. Hardware names, protocol identifiers and original errors retain their original text.
 
 Settings and rotating logs are in `~/Library/Application Support/Divoom/HardwareMonitor/`. **Diagnostics → Export diagnostic report** includes system/architecture details, SMC candidate keys, metric sources, errors and recent logs. It does not upload automatically.
 

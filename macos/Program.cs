@@ -15,6 +15,11 @@ internal static class Program
             Console.Error.WriteLine("此版本需要 macOS；Windows 请使用 Divoom.HardwareMonitor.exe。"); return 2;
         }
         if (args.FirstOrDefault() == "--collect") return MacMonitor.Collect(args.Length > 1 && int.TryParse(args[1], out int pid) ? pid : 0).GetAwaiter().GetResult();
+        if (args.FirstOrDefault() == "--bridge")
+        {
+            using var monitor = new MacMonitor();
+            return DesktopBridge.RunAsync(() => monitor.Current, monitor.Start, monitor.Restart, handler => monitor.Updated += handler, "macos").GetAwaiter().GetResult();
+        }
         if (args.FirstOrDefault() == "--probe") return Probe(args).GetAwaiter().GetResult();
         if (args.FirstOrDefault() == "--send-test") return SendTest(args).GetAwaiter().GetResult();
         Localizer.Configure(AppSettings.Load().Language);

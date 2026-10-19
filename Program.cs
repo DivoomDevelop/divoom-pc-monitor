@@ -8,6 +8,11 @@ internal static class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        if (args.FirstOrDefault() == "--bridge")
+        {
+            using var monitor = new MonitorService();
+            return DesktopBridge.RunAsync(() => monitor.Current, monitor.Start, monitor.RestartSensors, handler => monitor.Updated += handler, "windows").GetAwaiter().GetResult();
+        }
         if (args.FirstOrDefault() == "--sensors") return SensorWorker.Run(args.Length > 1 && int.TryParse(args[1], out int pid) ? pid : 0);
         if (args.FirstOrDefault() == "--send-test") return DeviceSendTest.RunAsync(args).GetAwaiter().GetResult();
         if (args.FirstOrDefault() == "--probe")

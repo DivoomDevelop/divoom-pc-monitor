@@ -2,11 +2,13 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-macOS 桌面硬件监控，分别提供 Apple 芯片 `osx-arm64` 和 Intel `osx-x64` 自包含版本，不需要另装 .NET。技术最低版本 macOS 14；建议使用仍受 Apple/.NET 支持的 macOS 版本。当前 Windows 环境只验证了构建、离线解析和共享协议，尚未完成 Mac 实机验证、Developer ID 签名与公证，属于测试版本。
+v1.3.0 起使用 Tauri 2 界面和 DMG 安装包，分别提供 Apple 芯片与 Intel 芯片版本，并内置 C# 采集后台与 .NET 运行时。技术最低版本 macOS 14。尚未完成用户真实 Mac 设备的验收、Developer ID 签名与公证，属于测试版本。
 
 ## 使用
 
-解压对应芯片的 `.tar.gz`，将 `DivoomMacMonitor.app` 拷贝到“应用程序”后打开。包内保留可执行权限。未签名测试包可能被 Gatekeeper 阻止；正式交付应先按下面流程签名、公证，不需要关闭系统安全设置。
+从 [Releases](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/latest) 下载对应芯片的 DMG，将 `DivoomPCMonitor.app` 拖到“应用程序”后打开。测试包使用 ad-hoc 签名，尚未完成 Developer ID 签名与公证，可能被 Gatekeeper 阻止。
+
+设备连接区常驻提示：**仅支持连接与本电脑处于同一局域网的设备。** 新版 Tauri 构建、后台布局和签名边界见 [Tauri 构建说明](../docs/TAURI.md)。下方 `Package-Mac.ps1` / `build-macos.sh` 是保留的旧原生界面和后台构建方式；当前默认安装包使用 `scripts/Build-Tauri.ps1`。
 
 - CPU 型号/使用率：sysctl 与 Mach tick 差分。内存：应用（匿名减可清除）、固定与物理压缩页之和；与 Windows 内存口径不同。
 - GPU 型号/使用率：IOKit PerformanceStatistics；CPU/GPU 温度：AppleSMC 只读访问。Intel 和 Apple 芯片传感器键独立识别；未知键或系统未开放时显示 `--`。多个 GPU 无法可靠关联 SMC 温度时不猜测对应关系。
@@ -26,7 +28,7 @@ Windows/Mac 直接编译同一份 `Transport.cs`，端口和数据格式分别�
 
 ## 语言与日志
 
-首次启动跟随系统语言；不支持的系统语言回退英语。设置可选“跟随系统”或 19 种语言，保存后重启生效：英语、简中、繁中、日语、德语、泰语、俄语、韩语、越南语、法语、土耳其语、西班牙语、葡萄牙语、印尼语、意大利语、乌克兰语、瑞典语、丹麦语、波兰语。硬件型号、协议标识和原始错误保留原文。
+首次启动跟随系统语言；不支持的系统语言回退英语。设置可选“跟随系统”或 19 种语言，Tauri 界面保存后即时生效：英语、简中、繁中、日语、德语、泰语、俄语、韩语、越南语、法语、土耳其语、西班牙语、葡萄牙语、印尼语、意大利语、乌克兰语、瑞典语、丹麦语、波兰语。硬件型号、协议标识和原始错误保留原文。
 
 设置/滚动日志位于 `~/Library/Application Support/Divoom/HardwareMonitor/`。“诊断 → 导出诊断报告”包含系统/架构、SMC 候选键、指标来源、错误和最近日志，不自动上传。
 

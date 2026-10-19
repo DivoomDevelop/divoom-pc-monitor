@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Divoom PC Monitor</title></head>
+<body>
+<div class="app">
+<header><div class="brand">Divoom <span>/</span> <span data-l10n="硬件监控"></span></div><span id="version"></span></header>
+<nav aria-label="Pages"><button class="active" data-tab="monitor" data-l10n="实时监控"></button><button data-tab="settings" data-l10n="采集设置"></button><button data-tab="diagnostics" data-l10n="诊断"></button></nav>
+<main>
+<section id="monitor" class="page active">
+<div class="metrics">
+<article class="metric"><h2>CPU</h2><div class="model" id="cpu-name">--</div><strong id="cpu-load">--</strong><div id="cpu-temp">--</div><small id="cpu-source"></small></article>
+<article class="metric"><h2>GPU</h2><div class="model" id="gpu-name">--</div><strong id="gpu-load">--</strong><div id="gpu-temp">--</div><small id="gpu-source"></small></article>
+<article class="metric"><h2 data-l10n="内存"></h2><div class="model" data-l10n="物理内存占用"></div><strong id="memory-load">--</strong><div id="memory-bytes">--</div><small id="memory-source"></small></article>
+<article class="metric"><h2 data-l10n="硬盘"></h2><div class="model" id="disk-name">--</div><strong id="disk-temp">--</strong><div id="disk-activity">--</div><small id="disk-source"></small></article>
+</div>
+<div class="dashboard">
+<article class="storage panel">
+<div class="field"><label for="gpu" data-l10n="发送显卡"></label><select id="gpu" data-device></select></div>
+<div class="field"><label for="disk" data-l10n="发送硬盘"></label><select id="disk" data-device></select></div>
+<div class="table-scroll"><table><thead><tr><th data-l10n="磁盘 / 卷"></th><th data-l10n="型号 / 容量"></th><th data-l10n="容量占用"></th><th data-l10n="活动率"></th><th data-l10n="温度"></th></tr></thead><tbody id="disks"></tbody></table></div>
+</article>
+<article class="connection panel">
+<div class="panel-heading"><h2 data-l10n="局域网设备"></h2><button id="discover" data-device data-l10n="刷新设备"></button></div>
+<aside class="notice" role="note"><span class="info" aria-hidden="true">i</span><span data-l10n="仅支持连接与本电脑处于同一局域网的设备。"></span></aside>
+<div class="connection-fields">
+<select id="devices" data-device aria-label="LAN devices"></select>
+<div class="field"><label for="ip" data-l10n="设备 IP"></label><input id="ip" data-device placeholder="192.168.1.100" spellcheck="false" autocomplete="off"></div>
+<div class="identity"><label for="hardware">Hardware<input type="number" id="hardware" data-device min="0" max="2147483647" step="1"></label><label for="deviceId">DeviceId<input type="number" id="deviceId" data-device min="0" max="2147483647" step="1"></label></div>
+<div id="endpoint" class="muted"></div>
+<div class="field"><label for="token">LocalToken</label><input id="token" data-device type="password" inputmode="numeric" autocomplete="off" maxlength="10"></div>
+<p class="hint" data-l10n="APP → Wi-Fi 设备 → 设置 → 本地令牌"></p>
+<div id="lcd-options" hidden><div class="lcd-title" data-l10n="TimeGate 五屏"></div><div class="lcd-row"><select id="lcd" data-device aria-label="LCD"><option value="0">LCD 1</option><option value="1">LCD 2</option><option value="2">LCD 3</option><option value="3">LCD 4</option><option value="4">LCD 5</option></select><label class="check"><input type="checkbox" id="independent" data-device><span data-l10n="LCD 独立模式"></span></label></div></div>
+</div>
+<button class="primary send" id="send" data-l10n="开始发送"></button>
+</article>
+</div>
+</section>
+<section id="settings" class="page">
+<div class="settings panel">
+<div class="field wide"><label for="language" data-l10n="语言"></label><select id="language"></select></div>
+<h2 data-l10n="温度采集权限"></h2><p id="permission-hint"></p>
+<div class="actions"><button id="pawnio" data-windows data-l10n="PawnIO 官方下载"></button><button id="elevate" data-windows data-l10n="以管理员身份重启"></button><button id="rescan" data-l10n="重新检测传感器"></button></div>
+<h2 data-l10n="硬盘温度补充"></h2>
+<select id="smart-mode"><option value="0"></option><option value="1" data-l10n="禁用补充采集"></option><option value="2" data-l10n="自定义 smartctl 路径"></option></select>
+<div class="actions"><input id="smart-path" placeholder="smartctl"><button id="browse" data-l10n="浏览…"></button></div>
+<p class="hint" id="smart-hint"></p><button id="smart-download" data-l10n="smartmontools 官方项目"></button>
+<label class="check provider" data-windows><input type="checkbox" id="plugins"><span data-l10n="启用 SDK 扩展"></span></label><p class="hint" data-windows data-l10n="扩展 SDK 需要单独授权。"></p>
+<button class="primary" id="save" data-l10n="保存并重启采集"></button>
+</div>
+</section>
+<section id="diagnostics" class="page">
+<div class="diagnostics panel"><div class="actions"><button id="export" data-l10n="导出诊断报告"></button><button id="logs" data-l10n="打开日志目录"></button><span class="hint" data-l10n="报告包含硬件和错误信息；不会自动上传。"></span></div><textarea id="diagnostic-text" readonly spellcheck="false" aria-label="Diagnostics"></textarea></div>
+</section>
+</main>
+<footer><span class="status-dot" id="status-dot"></span><span id="status" role="status" data-l10n="本机监控启动中 · 尚未发送"></span><span class="footer-note" data-l10n="本机监控独立运行；关闭窗口后保持后台运行。"></span></footer>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body></html>

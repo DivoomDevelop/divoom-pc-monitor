@@ -2,9 +2,9 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接设备或访问云端。
+Windows 10/11 x64、macOS 14+ 桌面工具，v1.3.0 起使用 Tauri 2 统一界面和安装包，保留 C# 硬件采集与设备通信后台。本机监控独立运行，不需要先连接设备或访问云端。
 
-新增 macOS 测试版，分别提供 Apple 芯片与 Intel 芯片版本，复用 Windows 的设备通信代码。使用、温度支持范围、构建及签名流程见 [macos/README.md](macos/README.md)。Windows 当前版 v1.2.0，macOS 测试版 v1.0.1。
+当前应用版本 v1.3.0。macOS 分别提供 Apple 芯片与 Intel 芯片测试版，使用、温度支持范围及签名说明见 [macos/README.md](macos/README.md)。Tauri 构建说明见 [docs/TAURI.md](docs/TAURI.md)。
 
 ## 下载即用
 
@@ -12,15 +12,18 @@ Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接�
 
 | 系统 | 下载 | 使用 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Windows 免安装包 v1.2.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomPCMonitor-win-x64-v1.2.0.zip) | 解压后运行 `DivoomPCMonitor/Divoom.HardwareMonitor.exe`，保留整个目录 |
-| macOS 14+ Apple 芯片 | [Apple 芯片测试包 v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-arm64-v1.0.1.tar.gz) | 解压后将 `.app` 拷贝到“应用程序” |
-| macOS 14+ Intel 芯片 | [Intel 芯片测试包 v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-x64-v1.0.1.tar.gz) | 解压后将 `.app` 拷贝到“应用程序” |
+| Windows 10/11 x64 | [Tauri 安装包 v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-win-x64-v1.3.0-setup.exe) | 安装后打开 DivoomPCMonitor |
+| Windows 10/11 x64 | [免安装 ZIP v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-win-x64-v1.3.0.zip) | 完整解压，运行 `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple 芯片 | [Apple 芯片 DMG v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-mac-arm64-v1.3.0.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
+| macOS 14+ Intel 芯片 | [Intel 芯片 DMG v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-mac-x64-v1.3.0.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
 
 发布包自带 .NET 运行时。macOS 包尚未完成 Developer ID 签名、公证及 Mac 实机验收，可能被 Gatekeeper 阻止，详见 [Mac 使用说明](macos/README.md)。Release 同时提供 SHA-256 校验文件。
 
 ## 使用
 
-解压完整的 `dist/DivoomPCMonitor` 目录，运行 `Divoom.HardwareMonitor.exe`。发布包包含 .NET 运行时，目标电脑不需要安装 .NET。
+安装后打开 DivoomPCMonitor；使用 ZIP 时保留完整目录和 `monitor` 后台目录。发布包包含 .NET 运行时，Windows 界面需要 WebView2，Tauri 安装程序会在缺少时安装该运行时。
+
+- 设备连接区常驻提示：**仅支持连接与本电脑处于同一局域网的设备。** 该提示支持 19 种语言；不是自动检测网络连通性的结果。
 
 - 主面板显示 CPU/GPU 型号、使用率、温度、内存占用、物理磁盘活动率和温度、本地卷容量占用。
 - 默认选择独立显卡和系统盘；可在“发送显卡/硬盘”选择数据来源。
@@ -28,7 +31,7 @@ Windows 10/11 x64 桌面工具。本机监控独立运行，不需要先连接�
 - 只有 Hardware 为 400、402 时显示 TimeGate 五屏、LCD 1–5 和独立模式选项；其它型号隐藏并收起该区域。联网设备列表可自动读取模式，手动 IP 可完全离线设置。
 - 点击“开始发送”时，90/92/96/400/402 切换到表盘 625，530 切换到表盘 3191，其它型号不发送切换表盘命令；随后每两秒发送 PC 数据。停止发送不停止本机监控。
 - 关闭窗口隐藏到托盘，双击托盘恢复。彻底退出请使用托盘菜单“退出”。默认不启用开机启动，不自动恢复发送。
-- 首次启动跟随系统语言，不匹配时使用英语；中文区分简体/繁体。采集设置提供“跟随系统”及 19 种语言，保存后重启生效：英语、简体中文、繁体中文、日语、德语、泰语、俄语、韩语、越南语、法语、土耳其语、西班牙语、葡萄牙语、印尼语、意大利语、乌克兰语、瑞典语、丹麦语、波兰语。产品界面/状态使用语言资源；硬件型号、命令标识、系统/设备原始错误及诊断内容保留原文。
+- 首次启动跟随系统语言，不匹配时使用英语；中文区分简体/繁体。采集设置提供“跟随系统”及 19 种语言，Tauri 界面保存后即时生效：英语、简体中文、繁体中文、日语、德语、泰语、俄语、韩语、越南语、法语、土耳其语、西班牙语、葡萄牙语、印尼语、意大利语、乌克兰语、瑞典语、丹麦语、波兰语。产品界面/状态使用语言资源；硬件型号、命令标识、系统/设备原始错误及诊断内容保留原文。
 - 连接区提供可选 `LocalToken`。获取路径：**Divoom APP → Wi-Fi 设备列表 → 对应设备“设置” → 本地令牌**。填写非负整数，随表盘切换与 PC 数据请求作为 JSON 数字发送；留空不发该字段。界面遮挡显示，仅本次运行内保存，修改 IP 时清空，不写入设置或诊断明细。设备错误中的 `DeviceToken is err` 表示需要检查此令牌，实际请求字段仍是 `LocalToken`。
 
 ## 温度与兼容性
@@ -74,7 +77,9 @@ HTTP 请求先缓冲为 UTF-8 JSON，明确设置 Content-Length；避免设备 
 
 ## 构建和验证
 
-需要 .NET 10 SDK；编译 ADLX 桥需要 Visual Studio C++ x64 工具。
+当前界面和安装包使用 Tauri，需要 Node.js 24、Rust stable、.NET 10 SDK；Windows 还需要 Visual Studio C++ x64 工具。默认构建：`./scripts/Build-Tauri.ps1`，然后运行 `./scripts/Package-Tauri.ps1` 整理可下载文件，详见 [Tauri 构建说明](docs/TAURI.md)。
+
+下面的兼容脚本只构建 C# 后台及旧原生界面，供诊断和后台开发使用：
 
 ```powershell
 ./build.ps1 -BootstrapSdk

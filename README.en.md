@@ -2,9 +2,9 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-A Windows 10/11 x64 desktop hardware monitor. Local monitoring works independently of device connections and cloud access.
+A Windows 10/11 x64 and macOS 14+ desktop hardware monitor. Version 1.3.0 uses Tauri 2 for the shared interface and installers, with the existing C# sensor and device-transport backend. Local monitoring works independently of device connections and cloud access.
 
-Windows: **v1.2.0**. macOS beta: **v1.0.1**, with separate Apple Silicon and Intel packages sharing the Windows device transport. See the [Mac guide](macos/README.en.md) for supported metrics, building, and signing.
+Current application: **v1.3.0**. Separate Apple Silicon and Intel Mac beta packages share the device transport. See the [Mac guide](macos/README.en.md) and [Tauri build guide](docs/TAURI.md).
 
 ## Download and run
 
@@ -12,21 +12,24 @@ Download a ready-to-run package from [GitHub Releases](https://github.com/Divoom
 
 | Platform | Download | Start |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Portable ZIP v1.2.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomPCMonitor-win-x64-v1.2.0.zip) | Extract the entire archive and run `DivoomPCMonitor/Divoom.HardwareMonitor.exe` |
-| macOS 14+ Apple Silicon | [ARM64 beta v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-arm64-v1.0.1.tar.gz) | Extract and copy the `.app` to Applications |
-| macOS 14+ Intel | [Intel beta v1.0.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.2.0/DivoomMacMonitor-osx-x64-v1.0.1.tar.gz) | Extract and copy the `.app` to Applications |
+| Windows 10/11 x64 | [Tauri installer v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-win-x64-v1.3.0-setup.exe) | Install and open DivoomPCMonitor |
+| Windows 10/11 x64 | [Portable ZIP v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-win-x64-v1.3.0.zip) | Extract everything and run `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple Silicon | [ARM64 DMG v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-mac-arm64-v1.3.0.dmg) | Open the DMG and drag the `.app` into Applications |
+| macOS 14+ Intel | [Intel DMG v1.3.0](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.0/DivoomPCMonitor-mac-x64-v1.3.0.dmg) | Open the DMG and drag the `.app` into Applications |
 
 Packages include the .NET runtime. Keep the complete application directory. Each release includes SHA-256 checksums. Mac packages have not completed Developer ID signing, notarization, or testing on physical Macs; Gatekeeper may block them. See the Mac guide.
 
 ## Usage
 
+- The connection card always shows: **Only devices on the same local network as this computer can be connected.** The notice is localized into all 19 languages and does not indicate an automatic connectivity check.
+- Keep the complete portable directory, including `monitor/`. Windows needs WebView2; the Tauri installer installs it if missing.
 - The dashboard shows CPU/GPU models, utilization and temperature, memory usage, physical disk activity and temperature, and volume capacity usage.
 - The default sources are the discrete GPU and system disk. Change them using **GPU to send** and **Disk to send**.
 - **Refresh devices** retrieves the device list and fills in Hardware. Alternatively, enter the device IPv4 address and Hardware manually. Models 90, 92 and 400 use port 80; all others use port 9000. The selected endpoint is displayed and Hardware is saved.
 - TimeGate five-screen controls, LCD 1–5 and independent mode appear only for Hardware 400 or 402. They are hidden and their rows collapse for other models. Device selection can read the LCD mode; manual IP settings also work offline.
 - **Start sending** selects clock 625 for models 90/92/96/400/402, or clock 3191 for 530. Other models skip clock selection. PC data is then sent every two seconds. Stopping transmission keeps local monitoring running.
 - Closing the window hides it to the tray. Double-click the tray icon to restore it, or choose **Exit** to quit. Startup launch is disabled by default; sending does not resume automatically.
-- The first launch follows the system language, with English as the fallback. Simplified and Traditional Chinese are distinguished. Collection Settings supports system language or 19 languages: English, Simplified Chinese, Traditional Chinese, Japanese, German, Thai, Russian, Korean, Vietnamese, French, Turkish, Spanish, Portuguese, Indonesian, Italian, Ukrainian, Swedish, Danish and Polish. Save and restart to apply a language change. Hardware names, protocol identifiers, original system/device errors and diagnostic details retain their original text.
+- The first launch follows the system language, with English as the fallback. Simplified and Traditional Chinese are distinguished. Collection Settings supports system language or 19 languages: English, Simplified Chinese, Traditional Chinese, Japanese, German, Thai, Russian, Korean, Vietnamese, French, Turkish, Spanish, Portuguese, Indonesian, Italian, Ukrainian, Swedish, Danish and Polish. Language changes apply immediately after saving in the Tauri interface. Hardware names, protocol identifiers, original system/device errors and diagnostic details retain their original text.
 - `LocalToken` is optional. Find it in **Divoom APP → Wi-Fi device list → Settings for the selected device → Local token**. Enter a nonnegative integer; it is sent as a JSON number in clock and data requests. Leaving it empty omits the field. Input is masked, kept only for the current session, cleared when the IP changes, and excluded from settings and request diagnostics. An error saying `DeviceToken is err` refers to token authentication; the actual request field is still `LocalToken`.
 
 ## Temperature and compatibility
@@ -72,7 +75,7 @@ Failures back off for 2, 4, 8, 16 and 30 seconds. Only the newest snapshot is se
 
 ## Build, test and release
 
-Install .NET 10 SDK and Visual Studio C++ x64 tools for the ADLX bridge.
+The default Tauri build requires Node.js 24, Rust stable and .NET 10 SDK, plus Visual Studio C++ x64 tools on Windows. Run `./scripts/Build-Tauri.ps1` then `./scripts/Package-Tauri.ps1`. See the [Tauri guide](docs/TAURI.md). The following compatibility script builds the C# backend and legacy native interface for backend development and diagnostics:
 
 ```powershell
 ./build.ps1 -BootstrapSdk

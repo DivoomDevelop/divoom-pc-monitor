@@ -15,7 +15,7 @@ void Check(bool ok, string label) { if (!ok) throw new Exception(label); passed+
 foreach (var language in Localizer.Languages)
 {
     Localizer.Configure(language.Code);
-    Check(Localizer.Resources[language.Code].Length == 83 && Localizer.Format("发送失败，{0} 秒后重试: {1}", 2, "HTTP 500").Contains("HTTP 500"), "Mac language resource and dynamic status " + language.Code);
+    Check(Localizer.Resources[language.Code].Length == Localizer.Resources["keys"].Length && Localizer.Format("发送失败，{0} 秒后重试: {1}", 2, "HTTP 500").Contains("HTTP 500"), "Mac language resource and dynamic status " + language.Code);
 }
 Localizer.Configure("zh-Hans");
 Check(MacParsing.CpuPercent([100, 40, 200, 0], [120, 50, 270, 0]) == 30, "CPU tick differences exclude idle");

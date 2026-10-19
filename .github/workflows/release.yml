@@ -1,4 +1,4 @@
-name: Build and publish desktop packages
+name: Legacy native UI packages (manual only)
 on:
   workflow_dispatch:
     inputs:
@@ -6,8 +6,6 @@ on:
         description: Release tag matching the Windows version (for example v1.2.0)
         required: true
         type: string
-  push:
-    tags: ['v*']
 permissions:
   contents: write
 concurrency:
