@@ -8,7 +8,7 @@
 - 新增桌面检查覆盖真实后台进程、基础硬件快照、非法请求、正常退出、19 种语言的局域网提示、指标时效及选卡选盘；本地默认不会连接设备或修改已有设置。CI 另在一次性 runner 上启用本机回环模拟设备，验证 3191 表盘、六项指标、Content-Length、数字 LocalToken 与令牌不落盘。
 - Windows Tauri Release 编译通过；新连接区固定显示同局域网提示与发送按钮，字段内容可滚动。Tauri 完整窗口和安装包检查在下方验收范围中记录。
 - Windows 已实际运行 Tauri 主窗口，确认中文同局域网提示、监控/设置/诊断三页显示正常；关闭后隐藏，再次启动恢复同一个窗口，未创建重复实例。
-- GitHub Actions 三个平台原生构建均通过：Windows 安装包/免安装 ZIP、Apple Silicon/Intel Mac DMG；每个平台的 6 项桌面检查均通过，两个 Mac 平台额外通过签名后及最终 app 内后台启动检查。构建记录：[39198393223](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/39198393223)（其旧发布步骤因目录层级失败，软件包由独立发布重试任务复用）。本机也实际启动了最终 Windows 免安装目录中的程序。
+- GitHub Actions 三个平台原生构建均通过：Windows 安装包/免安装 ZIP、Apple Silicon/Intel Mac DMG；每个平台的 6 项桌面检查均通过，两个 Mac 平台额外通过签名后及最终 app 内后台启动检查。构建记录：[39198393223](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/39198393223)（其旧发布步骤因目录层级失败）；[发布重试 39200148173](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/39200148173) 成功复用产物、核对大小及 SHA-256 并公开 v1.3.0。已匿名下载校验文件并核对四个软件包的服务器摘要。本机也实际启动了最终 Windows 免安装目录中的程序。
 - Windows Release 构建通过，现有 173 项回归检查覆盖数值格式、缺失/过期值、多显卡识别、SMART 超时及缓存、协议、取消/重试和语言资源。
 - Mac 代码完成 Apple 芯片和 Intel 芯片交叉构建；67 项检查覆盖 Darwin 内存布局/页大小、CPU tick 溢出、SMC 温度编码与分类、plist/SMART 解析、共享设备协议和语言资源。
 - 19 种语言的资源数量、动态占位符、系统语言匹配与手动设置检查通过；英语、俄语、泰语三个页面完成离屏渲染检查。
