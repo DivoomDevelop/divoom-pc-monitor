@@ -6,15 +6,21 @@ on:
         description: Version tag (for example v1.3.0)
         required: true
         type: string
+      build_run_id:
+        description: Reuse a completed run with three successful native builds (optional)
+        required: false
+        type: string
   push:
     tags: ['v*']
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: tauri-release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 jobs:
   build:
+    if: ${{ !inputs.build_run_id }}
     strategy:
       fail-fast: false
       matrix:
@@ -66,42 +72,68 @@ jobs:
           compression-level: 0
   publish:
     needs: build
+    if: ${{ always() && (needs.build.result == 'success' || (inputs.build_run_id != '' && needs.build.result == 'skipped')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+      BUILD_RUN_ID: ${{ inputs.build_run_id || github.run_id }}
     steps:
+      - name: Select and validate package source
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          if ($env:BUILD_RUN_ID -notmatch '^\d+$') { throw 'Invalid build run ID' }
+          $taskSource=$env:GITHUB_SHA
+          if ($env:BUILD_RUN_ID -ne $env:GITHUB_RUN_ID) {
+            $taskRunJson=gh api "repos/$env:GH_REPO/actions/runs/$env:BUILD_RUN_ID"
+            if ($LASTEXITCODE -ne 0) { throw 'Build run lookup failed' }
+            $taskRun=$taskRunJson | ConvertFrom-Json
+            if ($taskRun.status -ne 'completed' -or $taskRun.path -ne '.github/workflows/tauri-release.yml') { throw 'Expected a completed Tauri build run' }
+            $taskJobsJson=gh api "repos/$env:GH_REPO/actions/runs/$env:BUILD_RUN_ID/jobs?per_page=100"
+            if ($LASTEXITCODE -ne 0) { throw 'Build job lookup failed' }
+            $taskBuilds=@(($taskJobsJson | ConvertFrom-Json).jobs | Where-Object name -like 'build (*)')
+            if ($taskBuilds.Count -ne 3 -or @($taskBuilds | Where-Object conclusion -ne 'success').Count) { throw 'All three native builds must succeed before reusing packages' }
+            $taskSource=$taskRun.head_sha
+          }
+          "SOURCE_SHA=$taskSource" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ env.SOURCE_SHA }}
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           pattern: tauri-*
           merge-multiple: true
           path: packages
+          run-id: ${{ env.BUILD_RUN_ID }}
+          github-token: ${{ github.token }}
       - name: Verify and publish all platforms together
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
-          $taskFiles=Get-ChildItem -LiteralPath packages -File
+          $taskVersion=(Get-Content desktop/src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          if ($env:RELEASE_TAG -ne "v$taskVersion") { throw 'Tag and package source version differ' }
+          $taskFiles=Get-ChildItem -LiteralPath packages -Recurse -File
           if ($taskFiles.Count -ne 4) { throw 'Expected Windows installer, portable ZIP and two Mac DMGs' }
           $taskChecksums="packages/SHA256SUMS-$env:RELEASE_TAG.txt"
           $taskFiles | Sort-Object Name | ForEach-Object { "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)" } | Set-Content -LiteralPath $taskChecksums -Encoding ascii
           gh release view $env:RELEASE_TAG --json isDraft
           if ($LASTEXITCODE -ne 0) {
-            gh release create $env:RELEASE_TAG --draft --target $env:GITHUB_SHA --title "Divoom PC Monitor $env:RELEASE_TAG (Tauri)" --notes-file "docs/releases/$env:RELEASE_TAG.md"
+            gh release create $env:RELEASE_TAG --draft --target $env:SOURCE_SHA --title "Divoom PC Monitor $env:RELEASE_TAG (Tauri)" --notes-file "docs/releases/$env:RELEASE_TAG.md"
             if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
           }
-          $taskAssets=@((Get-ChildItem -LiteralPath packages -File).FullName)
+          $taskAssets=@((Get-ChildItem -LiteralPath packages -Recurse -File).FullName)
           gh release upload $env:RELEASE_TAG @taskAssets --clobber
           if ($LASTEXITCODE -ne 0) { throw 'Upload failed' }
           $taskJson=gh api "repos/$env:GH_REPO/releases?per_page=100"
           if ($LASTEXITCODE -ne 0) { throw 'Release lookup failed' }
           $taskRelease=($taskJson | ConvertFrom-Json) | Where-Object tag_name -eq $env:RELEASE_TAG
-          foreach ($taskFile in Get-ChildItem -LiteralPath packages -File) {
+          foreach ($taskFile in Get-ChildItem -LiteralPath packages -Recurse -File) {
             $taskAsset=$taskRelease.assets | Where-Object name -eq $taskFile.Name
             $taskDigest='sha256:'+(Get-FileHash -LiteralPath $taskFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             if (!$taskAsset -or $taskAsset.state -ne 'uploaded' -or $taskAsset.size -ne $taskFile.Length -or $taskAsset.digest -ne $taskDigest) { throw "Verification failed: $($taskFile.Name)" }
           }
-          gh release edit $env:RELEASE_TAG --draft=false --latest --target $env:GITHUB_SHA --notes-file "docs/releases/$env:RELEASE_TAG.md"
+          gh release edit $env:RELEASE_TAG --draft=false --latest --target $env:SOURCE_SHA --notes-file "docs/releases/$env:RELEASE_TAG.md"
           if ($LASTEXITCODE -ne 0) { throw 'Publication failed' }

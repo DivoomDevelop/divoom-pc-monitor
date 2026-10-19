@@ -27,7 +27,7 @@ v1.3.0 起，默认发布由 Tauri 2 构建 Windows NSIS 安装包、Windows 免
 
 检查：`npm test`（在 desktop 目录，包含真实后台进程测试，需先准备 backend）；`npm run build`；C# 原有 Windows/Mac 回归；Rust/Tauri 编译。本地默认测试不会连接设备或修改现有设置。仅一次性 CI runner 设置 `DIVOOM_CI_SENDING_TESTS=1`，额外向本机回环模拟设备发送并保存临时目标设置；不要在用户环境启用该选项。
 
-发布流程 `.github/workflows/tauri-release.yml` 分别在 Windows、Apple Silicon Mac 和 Intel Mac 运行构建和检查，收集四个软件包和 SHA-256 校验文件后统一公开 Release。推送版本标签或手动传入标签启动。标签须与 Tauri 版本一致，并先提供 `docs/releases/v版本.md` 的中英文说明。旧原生打包流程改为仅手动运行。
+发布流程 `.github/workflows/tauri-release.yml` 分别在 Windows、Apple Silicon Mac 和 Intel Mac 运行构建和检查，收集四个软件包和 SHA-256 校验文件后统一公开 Release。推送版本标签或手动传入标签启动。标签须与 Tauri 版本一致，并先提供 `docs/releases/v版本.md` 的中英文说明。仅发布步骤失败时，可手动填写 `build_run_id` 复用已完成且三个平台构建均成功的产物；流程会校验来源，并将版本标签指向产物对应的源码提交。旧原生打包流程改为仅手动运行。
 
 安装包附带中英文说明、.NET/第三方依赖许可证、Rust 依赖清单及可用许可证。Windows 后台仍内置 smartmontools 可执行文件、数据库、GPL 许可证及匹配源码。Mac 后台不内置 smartctl。
 
@@ -49,7 +49,7 @@ Packages are staged in `dist/tauri-v1.3.0/`. Run `DivoomPCMonitor.exe` from the 
 
 For hot reload, prepare `desktop/backend/` and run `npm run tauri -- dev --no-default-features` in desktop. A standalone Vite server has no hardware connection. Default local tests include a real child-process bridge check without device traffic or settings writes. Disposable CI runners additionally set `DIVOOM_CI_SENDING_TESTS=1` to send to a loopback mock device and save its temporary target settings; do not enable this option in a user's environment. Existing C# regressions and native Tauri builds remain part of validation.
 
-The release workflow builds on native Windows, Apple Silicon and Intel Mac runners, verifies uploaded sizes and SHA-256 digests, and publishes all platforms together. Trigger it with a version tag or manual dispatch. Add bilingual notes at `docs/releases/vVERSION.md` before releasing. Chinese and English guides, runtime and third-party licenses, Rust dependency notices and the Windows smartmontools matching source are bundled.
+The release workflow builds on native Windows, Apple Silicon and Intel Mac runners, verifies uploaded sizes and SHA-256 digests, and publishes all platforms together. Trigger it with a version tag or manual dispatch. Add bilingual notes at `docs/releases/vVERSION.md` before releasing. If only publication fails, the optional `build_run_id` input reuses a completed run after verifying all three native builds succeeded, and tags the source commit that produced those packages. Chinese and English guides, runtime and third-party licenses, Rust dependency notices and the Windows smartmontools matching source are bundled.
 
 Mac packages use ad-hoc signing and still require Developer ID signing, notarization and physical-Mac acceptance for formal distribution. CI success does not validate every sensor, actual installation or sleep/wake behavior.
 
