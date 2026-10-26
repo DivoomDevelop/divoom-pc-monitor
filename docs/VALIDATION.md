@@ -5,8 +5,9 @@
 ## 已完成
 
 - v1.3.1：旧 Windows 与 Tauri 的底部状态区改为有界、多行、可滚动和选择复制的只读文本框；后台不再截断 300 字符后的设备错误，令牌继续脱敏。旧 Windows 与最终打包的 Tauri 实际窗口均验证了 927 字符模拟错误、滚动查看尾部及全选；模拟服务仅监听本机回环地址，测试后已停止并恢复临时目标设置。
-- v1.3.1：按 T113 固件 `net/divoom_device_json.c` 的 `divoom_device_pc_update_clock_data_respone_unpack` 修复 511：9000 接口使用 ScreenList/LcdId，保持不自动切表盘。511 实机 10 秒内连续 5 次返回成功；发送记录位于本地忽略目录 `artifacts/device-send-511-fixed.json`。需手动打开设备的 PC 监控表盘，未宣称已确认屏幕实际显示。
+- v1.3.1：按 T113 固件 `net/divoom_device_json.c` 的 `divoom_device_pc_update_clock_data_respone_unpack` 修复 511：9000 接口使用 ScreenList/LcdId，保持不自动切表盘。511175 固件实机 10 秒内连续 5 次返回成功；发送记录位于本地忽略目录 `artifacts/device-send-511-fixed.json`。只读查询返回当前表盘 1631，源码 PC 监控表盘 ID 为 1018；需手动进入 PC 监控表盘，未宣称已确认屏幕实际显示。
 - v1.3.1 本地 Windows 178 项、Mac 70 项回归通过，覆盖 511 的独立端口/数据格式、表盘白名单及长错误完整性和脱敏。
+- v1.3.1 [云端构建及发布 40267174567](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/40267174567) 四个任务全部通过：Windows、Apple Silicon Mac、Intel Mac 构建及发布。所有平台均通过包含 530/511 格式的真实桥接模拟发送检查；发布的四个软件包及 SHA-256 文件已核对，并通过匿名下载校验文件复核服务器摘要。
 - 新增 Tauri 2 桌面前端、Rust 后台生命周期管理和 C# 私有逐行 JSON 桥，复用原有硬件采集与设备通信逻辑。
 - 新增桌面检查覆盖真实后台进程、基础硬件快照、非法请求、正常退出、19 种语言的局域网提示、指标时效及选卡选盘；本地默认不会连接设备或修改已有设置。CI 另在一次性 runner 上启用本机回环模拟设备，验证 3191 表盘、六项指标、Content-Length、数字 LocalToken 与令牌不落盘。
 - Windows Tauri Release 编译通过；新连接区固定显示同局域网提示与发送按钮，字段内容可滚动。Tauri 完整窗口和安装包检查在下方验收范围中记录。
