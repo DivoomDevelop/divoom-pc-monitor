@@ -20,7 +20,7 @@ public sealed class MainForm : Form
     private readonly CheckBox _timeGate = new() { Text = "TimeGate 五屏", AutoSize = true };
     private readonly CheckBox _independent = new() { Text = "LCD 独立模式", AutoSize = true };
     private readonly Button _start = Button("开始发送", 110), _discover = Button("刷新设备", 100);
-    private readonly Label _status = new() { Text = "本机监控启动中 · 尚未发送", AutoSize = true, ForeColor = Color.FromArgb(38, 95, 135), Padding = new(0, 8, 0, 0) };
+    private readonly TextBox _status = new() { Name = "connection-status", Text = Localizer.Get("本机监控启动中 · 尚未发送"), Multiline = true, ReadOnly = true, WordWrap = true, ScrollBars = ScrollBars.Vertical, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.White, ForeColor = Color.FromArgb(38, 95, 135) };
     private readonly ComboBox _smartctl = Combo(330);
     private readonly CheckBox _plugins = new() { Text = "启用 providers 目录中的 SDK 扩展（需要自行提供授权适配器）", AutoSize = true };
     private readonly TextBox _smartctlPath = new() { Width = 580, PlaceholderText = "smartctl.exe" };
@@ -48,6 +48,11 @@ public sealed class MainForm : Form
         tabs.TabPages.Add(MonitorPage()); tabs.TabPages.Add(SettingsPage()); tabs.TabPages.Add(DiagnosticPage());
         root.Controls.Add(title, 0, 0); root.Controls.Add(tabs, 0, 1); root.Controls.Add(new Label { Text = "本机监控独立运行；关闭窗口后保持后台运行。", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, ForeColor = Color.DimGray }, 0, 2);
         Controls.Add(root);
+        _status.TextChanged += (_, _) =>
+        {
+            string normalized = _status.Text.ReplaceLineEndings("\r\n");
+            if (_status.Text != normalized) _status.Text = normalized;
+        };
         var menu = new ContextMenuStrip();
         menu.Items.Add("显示监控面板", null, (_, _) => RestoreWindow());
         menu.Items.Add("开始 / 停止发送", null, async (_, _) => { RestoreWindow(); await ToggleSending(); });
@@ -86,6 +91,7 @@ public sealed class MainForm : Form
     {
         if (control is (Label or System.Windows.Forms.Button or TabPage or GroupBox or CheckBox or Form) && control.Tag as string is not ("HardwareName" or "RawDiagnostic")) control.Text = Localizer.Ui(control.Text);
         if (control is TextBox box && !box.ReadOnly) box.PlaceholderText = Localizer.Ui(box.PlaceholderText);
+        if (control is TextBox { Name: "connection-status" }) control.Text = Localizer.Ui(control.Text);
         if (control is DataGridView grid) foreach (DataGridViewColumn column in grid.Columns) column.HeaderText = Localizer.Ui(column.HeaderText);
         foreach (Control child in control.Controls) ApplyLanguage(child);
     }
@@ -103,7 +109,7 @@ public sealed class MainForm : Form
         // Bounded rows keep the disk table visible. Never combine an auto-sized
         // connection panel with a percentage-height sibling: their preferred sizes cycle.
         var body = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 1, RowCount = 3 };
-        body.RowStyles.Add(new(SizeType.Absolute, 164)); body.RowStyles.Add(new(SizeType.Percent, 100)); body.RowStyles.Add(new(SizeType.Absolute, 38));
+        body.RowStyles.Add(new(SizeType.Absolute, 164)); body.RowStyles.Add(new(SizeType.Percent, 100)); body.RowStyles.Add(new(SizeType.Absolute, 96));
         var cards = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 4, RowCount = 1 };
         for (int i = 0; i < 4; i++) cards.ColumnStyles.Add(new(SizeType.Percent, 25));
         cards.Controls.Add(_cpuCard, 0, 0); cards.Controls.Add(_gpuCard, 1, 0); cards.Controls.Add(_memoryCard, 2, 0); cards.Controls.Add(_diskCard, 3, 0);
@@ -192,7 +198,7 @@ public sealed class MainForm : Form
         _start.BackColor = Color.FromArgb(28, 112, 224); _start.ForeColor = Color.White; _start.FlatAppearance.BorderSize = 0;
         connectionScroll.Controls.Add(connectionRows); connection.Controls.Add(connectionScroll, 0, 0);
         connection.Controls.Add(Line(_start), 0, 1); lower.Controls.Add(connection, 1, 0); body.Controls.Add(lower, 0, 1);
-        _status.Dock = DockStyle.Fill; _status.AutoSize = false; _status.AutoEllipsis = true; _status.Margin = new(5, 3, 5, 0);
+        _status.Dock = DockStyle.Fill; _status.Margin = new(5, 8, 5, 0);
         body.Controls.Add(_status, 0, 2); page.Controls.Add(body);
         return page;
     }

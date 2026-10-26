@@ -51,7 +51,7 @@
 <div class="diagnostics panel"><div class="actions"><button id="export" data-l10n="导出诊断报告"></button><button id="logs" data-l10n="打开日志目录"></button><span class="hint" data-l10n="报告包含硬件和错误信息；不会自动上传。"></span></div><textarea id="diagnostic-text" readonly spellcheck="false" aria-label="Diagnostics"></textarea></div>
 </section>
 </main>
-<footer><span class="status-dot" id="status-dot"></span><span id="status" role="status" data-l10n="本机监控启动中 · 尚未发送"></span><span class="footer-note" data-l10n="本机监控独立运行；关闭窗口后保持后台运行。"></span></footer>
+<footer><span class="status-dot" id="status-dot"></span><textarea id="status" readonly spellcheck="false" rows="3" aria-live="polite" data-l10n="本机监控启动中 · 尚未发送"></textarea><span class="footer-note" data-l10n="本机监控独立运行；关闭窗口后保持后台运行。"></span></footer>
 </div>
 <script type="module" src="/src/main.js"></script>
 </body></html>

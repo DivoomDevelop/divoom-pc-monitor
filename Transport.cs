@@ -14,7 +14,7 @@ public sealed record DeviceInfo(int DeviceId, int Hardware, string DeviceName, s
 public sealed record DeviceTarget(string Ip, int DeviceId, int LcdIndex, int LcdIndependence, int Hardware = 0, uint? LocalToken = null)
 {
     public bool UsesLegacyEndpoint => Hardware is 90 or 92 or 400;
-    public bool UsesScreenList => UsesLegacyEndpoint || Hardware == 402;
+    public bool UsesScreenList => UsesLegacyEndpoint || Hardware is 402 or 511;
     public int? PcClockId => Hardware switch { 90 or 92 or 96 or 400 or 402 => 625, 530 => 3191, _ => null };
     public Uri PostUri
     {
@@ -91,7 +91,7 @@ public interface IDeviceTransport : IDisposable
 
 public sealed class DivoomTransport : IDeviceTransport
 {
-    private sealed class DeviceResponseException(int code, string response) : HttpRequestException($"设备返回错误 {code}: {response[..Math.Min(response.Length, 300)]}")
+    private sealed class DeviceResponseException(int code, string response) : HttpRequestException($"设备返回错误 {code}: {response}")
     {
         public bool NeedsClockCompatibility => code == 1 && response.Contains("Only accept JSON parameters", StringComparison.OrdinalIgnoreCase);
     }

@@ -10,7 +10,7 @@ test('same-LAN notice and service failure have all 19 translations',()=>{
   assert.equal(translator('unknown')(LAN_NOTICE),translator('en')(LAN_NOTICE));
 });
 test('TimeGate visibility and endpoint rules remain independent',()=>{
-  for(const hardware of [0,90,92,96,400,402,530,999]){
+  for(const hardware of [0,90,92,96,400,402,511,530,999]){
     assert.equal(timeGate(hardware),hardware===400||hardware===402);
     assert.equal(endpoint('192.168.1.100',hardware),[90,92,400].includes(hardware)?'http://192.168.1.100:80/post':'http://192.168.1.100:9000/divoom_api');
   }

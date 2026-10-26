@@ -21,7 +21,7 @@ v1.3.0 起，默认发布由 Tauri 2 构建 Windows NSIS 安装包、Windows 免
 
 本机已有 ADLX 桥时可传 `-SkipNative`。只验证程序、不生成安装包时传 `-NoBundle`；`-DebugBuild` 构建调试程序；`-SkipBackendBuild` 仅供已有匹配版本后台时使用。`-UseLld` 是 Windows 可选链接器选择，不更改系统安全策略。
 
-默认发布包整理在 `dist/tauri-v1.3.0/`。Windows ZIP 入口是 `DivoomPCMonitor.exe`，`monitor/Divoom.HardwareMonitor.exe` 是后台。Mac DMG 入口是 `DivoomPCMonitor.app`，后台位于 `Contents/Resources/monitor/Divoom.MacMonitor`。命令行 `--probe` / `--send-test` 仍由后台程序提供。
+默认发布包整理在 `dist/tauri-v1.3.1/`。Windows ZIP 入口是 `DivoomPCMonitor.exe`，`monitor/Divoom.HardwareMonitor.exe` 是后台。Mac DMG 入口是 `DivoomPCMonitor.app`，后台位于 `Contents/Resources/monitor/Divoom.MacMonitor`。命令行 `--probe` / `--send-test` 仍由后台程序提供。
 
 开发热重载：先准备 `desktop/backend/`，然后在 `desktop/` 执行 `npm run tauri -- dev --no-default-features`。单独执行 `npm run dev` 只提供前端开发服务器，无法连接真实采集后台。
 
@@ -45,7 +45,7 @@ A persistent pale-blue notice under the LAN devices heading states: **Only devic
 
 Install Node.js 24, Rust stable and .NET 10 SDK. Windows also needs Visual Studio C++ x64 tools and WebView2; Mac needs Xcode Command Line Tools. Run the two PowerShell commands above from the repository root. `-SkipNative` reuses an existing ADLX bridge; `-NoBundle` builds without installers; `-DebugBuild` selects debug output. Use `-SkipBackendBuild` only when a matching backend is already prepared. `-UseLld` optionally selects the Windows Rust LLD linker.
 
-Packages are staged in `dist/tauri-v1.3.0/`. Run `DivoomPCMonitor.exe` from the portable ZIP. The Windows backend is `monitor/Divoom.HardwareMonitor.exe`; the Mac backend is `DivoomPCMonitor.app/Contents/Resources/monitor/Divoom.MacMonitor`. Existing command-line probes and sending tests are provided by these backend executables.
+Packages are staged in `dist/tauri-v1.3.1/`. Run `DivoomPCMonitor.exe` from the portable ZIP. The Windows backend is `monitor/Divoom.HardwareMonitor.exe`; the Mac backend is `DivoomPCMonitor.app/Contents/Resources/monitor/Divoom.MacMonitor`. Existing command-line probes and sending tests are provided by these backend executables.
 
 For hot reload, prepare `desktop/backend/` and run `npm run tauri -- dev --no-default-features` in desktop. A standalone Vite server has no hardware connection. Default local tests include a real child-process bridge check without device traffic or settings writes. Disposable CI runners additionally set `DIVOOM_CI_SENDING_TESTS=1` to send to a loopback mock device and save its temporary target settings; do not enable this option in a user's environment. Existing C# regressions and native Tauri builds remain part of validation.
 

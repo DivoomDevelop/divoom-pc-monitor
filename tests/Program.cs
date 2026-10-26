@@ -89,7 +89,7 @@ Check(LibreProvider.ChooseCpuTemperature([("CPU Core #1", 60), ("CPU Core #2", 7
 Check(SmartctlParser.Parse("{\"smartctl\":{\"exit_status\":8},\"temperature\":{\"current\":42}}").Value == 42, "SMART health warning does not discard a readable temperature");
 Check(SmartctlParser.Parse("{\"smartctl\":{\"exit_status\":2},\"temperature\":{\"current\":42}}").Value is null, "SMART open failure is not a temperature");
 Check(SmartctlParser.Parse("{}").Value is null, "missing SMART temperature stays missing");
-foreach (int hardware in new[] { 90, 92, 96, 400, 402, 530, 91, 401, 0 })
+foreach (int hardware in new[] { 90, 92, 96, 400, 402, 511, 530, 91, 401, 0 })
 {
     var uri = new DeviceTarget("127.0.0.1", 0, 0, 0, hardware).PostUri;
     bool legacyEndpoint = hardware is 90 or 92 or 400;
@@ -113,7 +113,7 @@ using (var transport = new DivoomTransport(new RecordingHandler()))
     using var payload = JsonDocument.Parse(RecordingHandler.LastBody!);
     Check(payload.RootElement.GetProperty("ScreenList")[0].GetProperty("DispData").GetArrayLength() == 6, "HTTP JSON preserves firmware field casing");
 }
-foreach (var (hardware, clockId) in new[] { (90, (int?)625), (92, (int?)625), (96, (int?)625), (400, (int?)625), (402, (int?)625), (530, (int?)3191), (0, (int?)null), (91, (int?)null), (999, (int?)null) })
+foreach (var (hardware, clockId) in new[] { (90, (int?)625), (92, (int?)625), (96, (int?)625), (400, (int?)625), (402, (int?)625), (511, (int?)null), (530, (int?)3191), (0, (int?)null), (91, (int?)null), (999, (int?)null) })
 {
     var handler = new RecordingHandler();
     using var transport = new DivoomTransport(handler);
@@ -191,6 +191,12 @@ using (var sender = new SendingService(new FakeTransport(), () => snapshot))
 }
 using (var transport = new DivoomTransport(new RecordingHandler("{\"ReturnCode\":100,\"ReturnMessage\":\"Error\"}")))
     await Reject(() => transport.SendAsync(new("127.0.0.1", 0, 0, 0, 90), packet, CancellationToken.None), "device errors are surfaced");
+string fullError = JsonSerializer.Serialize(new { ReturnCode = 100, ReturnMessage = new string('x', 600) + "END-OF-DEVICE-ERROR", LocalToken = 123456 });
+using (var transport = new DivoomTransport(new RecordingHandler(fullError)))
+{
+    try { await transport.SendAsync(new("127.0.0.1", 0, 0, 0, 511), packet, CancellationToken.None); Check(false, "long device errors must fail"); }
+    catch (HttpRequestException error) { Check(error.Message.Contains("END-OF-DEVICE-ERROR") && !error.Message.Contains("123456"), "complete device errors retain their tail and redact LocalToken"); }
+}
 using (var transport = new DivoomTransport(new RecordingHandler("{}", HttpStatusCode.InternalServerError)))
     await Reject(() => transport.SendAsync(new("127.0.0.1", 0, 0, 0, 90), packet, CancellationToken.None), "HTTP errors are surfaced");
 using (var transport = new DivoomTransport(new HangingHandler()))

@@ -7,12 +7,13 @@ const $=id=>document.getElementById(id);
 const state={settings:null,snapshot:null,language:'en',platform:'windows',running:false,devices:[],report:null,systemVolume:''};
 let t=translator('en');
 const rpc=(command,payload=null)=>invoke('bridge_request',{command,payload});
-const text=(id,value)=>{$(id).textContent=value??'';$(id).title=value??'';};
+const text=(id,value)=>{const el=$(id),content=value??'';if(el instanceof HTMLTextAreaElement){if(el.value!==content)el.value=content;}else el.textContent=content;el.title=content;};
 function status(value,error=false){text('status',value);$('status-dot').className='status-dot'+(error?' error':state.running?' sending':'');}
 function translate(){
   t=translator(state.language);
   document.documentElement.lang=state.language;
   document.querySelectorAll('[data-l10n]').forEach(el=>el.textContent=t(el.dataset.l10n));
+  $('status').setAttribute('aria-label',t('诊断'));
   $('token').placeholder=t('可选：本地令牌');$('devices').setAttribute('aria-label',t('局域网设备'));
   text('permission-hint',t(state.platform==='windows'?'CPU 温度可能需要 PawnIO 和管理员权限。':'温度取决于硬件与系统支持；不可用时显示 --。'));
   text('smart-hint',t(state.platform==='windows'?'自动补充缺失的磁盘温度；部分磁盘需要管理员权限。':'自动查找 Homebrew 路径；不自动提权。'));
@@ -91,7 +92,7 @@ async function init(){
   state.snapshot=state.snapshot||result.snapshot;
   $('language').replaceChildren(new Option(t('跟随系统'),'auto'),...result.languages.map(l=>new Option(l.Name,l.Code)));
   document.querySelectorAll('input,select,button').forEach(el=>el.disabled=false);
-  fillSettings();translate();text('version','v1.3.0');setRunning(result.running);status(result.status);
+  fillSettings();translate();text('version','v1.3.1');setRunning(result.running);status(result.status);
   await invoke('set_language',{code:state.language});render();
   // Refresh age-sensitive fields even when a collection worker stops responding.
   setInterval(render,1000);
