@@ -6,7 +6,7 @@ import {createInterface} from 'node:readline';
 import path from 'node:path';
 // Explicit opt-in only on disposable CI runners: Start persists the mock target.
 // Never point these tests at a physical device or a user's settings directory.
-test('CI loopback device: 530 and 511 formats, clock whitelist and numeric LocalToken',{skip:process.env.DIVOOM_CI_SENDING_TESTS!=='1',timeout:45000},async t=>{
+test('CI loopback device: 530 and TimesFrame formats, clock whitelist and numeric LocalToken',{skip:process.env.DIVOOM_CI_SENDING_TESTS!=='1',timeout:60000},async t=>{
   const messages=[];
   const server=createServer((req,res)=>{let raw='';req.setEncoding('utf8');req.on('data',part=>raw+=part);req.on('end',()=>{messages.push({path:req.url,length:Number(req.headers['content-length']),bytes:Buffer.byteLength(raw),body:JSON.parse(raw)});res.writeHead(200,{'Content-Type':'application/json'});res.end('{"ReturnCode":0}');});});
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(9000,'127.0.0.1',resolve);});
@@ -30,16 +30,21 @@ test('CI loopback device: 530 and 511 formats, clock whitelist and numeric Local
   assert.ok(clock);assert.equal(clock.body.ClockId,3191);assert.ok(data);assert.equal(data.body.DispData.length,6);
   assert.equal(data.body.DeviceId,42);assert.equal('ClockId' in data.body,false);
   for(const message of [clock,data]){assert.equal(message.path,'/divoom_api');assert.equal(message.length,message.bytes);assert.equal(message.body.LocalToken,1234);assert.equal('DeviceToken' in message.body,false);}
-  messages.length=0;
-  assert.equal((await request('start',{settings:{...settings,DeviceHardware:511,DeviceId:0},localToken:'1234'})).ok,true);
-  const frameDeadline=Date.now()+8000;while(messages.length<1&&Date.now()<frameDeadline)await new Promise(resolve=>setTimeout(resolve,50));
-  assert.equal((await request('stop')).ok,true);assert.ok(messages.length>=1);
-  assert.ok(messages.every(message=>message.body.Command==='Device/UpdatePCParaInfo'));
-  const frame=messages[0];assert.equal(frame.body.Command,'Device/UpdatePCParaInfo');
-  assert.equal(frame.body.ScreenList[0].LcdId,0);assert.equal(frame.body.ScreenList[0].DispData.length,6);
-  assert.ok(frame.body.ScreenList[0].DispData.every(value=>typeof value==='string'));
-  assert.equal(frame.path,'/divoom_api');assert.equal(frame.length,frame.bytes);assert.equal(frame.body.LocalToken,1234);
-  for(const key of ['ClockId','AppName','DeviceToken'])assert.equal(key in frame.body,false);
+  for(const hardware of [510,511,512]){
+    messages.length=0;
+    assert.equal((await request('start',{settings:{...settings,DeviceHardware:hardware},localToken:'1234'})).ok,true);
+    const frameDeadline=Date.now()+8000;while(messages.length<2&&Date.now()<frameDeadline)await new Promise(resolve=>setTimeout(resolve,50));
+    assert.equal((await request('stop')).ok,true);assert.ok(messages.length>=2);
+    assert.equal(messages[0].body.Command,'Channel/SetClockSelectId');assert.equal(messages[0].body.ClockId,1631);
+    assert.equal(messages.filter(message=>message.body.Command==='Channel/SetClockSelectId').length,1);
+    for(const message of messages){assert.equal(message.path,'/divoom_api');assert.equal(message.length,message.bytes);assert.equal(message.body.LocalToken,1234);assert.equal('DeviceToken' in message.body,false);}
+    for(const frame of messages.slice(1)){
+      assert.equal(frame.body.Command,'Device/UpdatePCParaInfo');
+      assert.equal(frame.body.ScreenList[0].LcdId,0);assert.equal(frame.body.ScreenList[0].DispData.length,6);
+      assert.ok(frame.body.ScreenList[0].DispData.every(value=>typeof value==='string'));
+      for(const key of ['ClockId','AppName','DeviceToken'])assert.equal(key in frame.body,false);
+    }
+  }
   const after=await request('init');assert.equal('LocalToken' in after.data.settings,false);
   assert.equal((await request('quit')).ok,true);assert.equal(await exited,0);
 });

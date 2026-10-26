@@ -1,11 +1,15 @@
 # 验证范围
 
-版本：Tauri 桌面 v1.3.1；Windows 后台 v1.3.1、Mac 后台 v1.1.1。更新时间：2026-10-26。
+版本：Tauri 桌面 v1.3.2；Windows 后台 v1.3.2、Mac 后台 v1.1.2。更新时间：2026-10-26。
 
 ## 已完成
 
+- v1.3.2：TimesFrame 510/511/512 先发送 `Channel/SetClockSelectId`，ClockId 为 1631，再向 `9000/divoom_api` 发送 ScreenList/LcdId 六项指标；其它型号白名单和仅 400/402 显示五屏选项的规则保持不变。
+- v1.3.2：本地 Windows 186 项、Mac 共享协议/解析/界面 76 项检查通过；桌面 5 项通过，CI 专用发送测试在本地跳过。新增 CI 真实桥接回环测试逐一覆盖 510/511/512 的选表顺序、1631、数据格式、Content-Length 与数字 LocalToken。
+- v1.3.2：511175 实机发送记录 `artifacts/device-send-511-1631-v1.3.2.json` 确认先选 1631，然后 10 秒内 5 次数据更新均成功。只读 `Channel/GetClockInfo` 返回 1631，`Device/GetLocalClockInfo` 确认该表盘名称为“电脑监测 / Computer monitoring”。510/512 尚无实机验收；511 屏幕实际数值刷新仍需目视确认。
+- 固件源码检查：`middle/include/divoom.h` 的 `DIVOOM_PC_PARA_CLOCK_ID` 仍为 1018，`divoom_clock_control_update_pc_data` 按此常量查找控制器。该源码与实机表盘 1631 存在不一致，可能导致 HTTP 返回成功但不刷新；桌面修复不能代替固件确认。本次未刷写设备固件。
 - v1.3.1：旧 Windows 与 Tauri 的底部状态区改为有界、多行、可滚动和选择复制的只读文本框；后台不再截断 300 字符后的设备错误，令牌继续脱敏。旧 Windows 与最终打包的 Tauri 实际窗口均验证了 927 字符模拟错误、滚动查看尾部及全选；模拟服务仅监听本机回环地址，测试后已停止并恢复临时目标设置。
-- v1.3.1：按 T113 固件 `net/divoom_device_json.c` 的 `divoom_device_pc_update_clock_data_respone_unpack` 修复 511：9000 接口使用 ScreenList/LcdId，保持不自动切表盘。511175 固件实机 10 秒内连续 5 次返回成功；发送记录位于本地忽略目录 `artifacts/device-send-511-fixed.json`。只读查询返回当前表盘 1631，源码 PC 监控表盘 ID 为 1018；需手动进入 PC 监控表盘，未宣称已确认屏幕实际显示。
+- v1.3.1：按 T113 固件 `net/divoom_device_json.c` 的 `divoom_device_pc_update_clock_data_respone_unpack` 修复 511：9000 接口使用 ScreenList/LcdId，该历史版本不自动切表盘。511175 固件实机 10 秒内连续 5 次返回成功；发送记录位于本地忽略目录 `artifacts/device-send-511-fixed.json`。只读查询返回当前表盘 1631。更正：用户确认 TimesFrame 的 PC 表盘为 1631，之前根据源码旧常量 1018 建议手动切换的判断有误；v1.3.2 将 510/511/512 加入自动切换 1631 白名单。返回成功不等于已经确认屏幕实际刷新。
 - v1.3.1 本地 Windows 178 项、Mac 70 项回归通过，覆盖 511 的独立端口/数据格式、表盘白名单及长错误完整性和脱敏。
 - v1.3.1 [云端构建及发布 40267174567](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/40267174567) 四个任务全部通过：Windows、Apple Silicon Mac、Intel Mac 构建及发布。所有平台均通过包含 530/511 格式的真实桥接模拟发送检查；发布的四个软件包及 SHA-256 文件已核对，并通过匿名下载校验文件复核服务器摘要。
 - 新增 Tauri 2 桌面前端、Rust 后台生命周期管理和 C# 私有逐行 JSON 桥，复用原有硬件采集与设备通信逻辑。

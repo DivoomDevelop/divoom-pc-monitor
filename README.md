@@ -4,7 +4,7 @@
 
 Windows 10/11 x64、macOS 14+ 桌面工具，v1.3.0 起使用 Tauri 2 统一界面和安装包，保留 C# 硬件采集与设备通信后台。本机监控独立运行，不需要先连接设备或访问云端。
 
-当前应用版本 v1.3.1。macOS 分别提供 Apple 芯片与 Intel 芯片测试版，使用、温度支持范围及签名说明见 [macos/README.md](macos/README.md)。Tauri 构建说明见 [docs/TAURI.md](docs/TAURI.md)。
+当前应用版本 v1.3.2。macOS 分别提供 Apple 芯片与 Intel 芯片测试版，使用、温度支持范围及签名说明见 [macos/README.md](macos/README.md)。Tauri 构建说明见 [docs/TAURI.md](docs/TAURI.md)。
 
 ## 下载即用
 
@@ -12,10 +12,10 @@ Windows 10/11 x64、macOS 14+ 桌面工具，v1.3.0 起使用 Tauri 2 统一界�
 
 | 系统 | 下载 | 使用 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Tauri 安装包 v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-win-x64-v1.3.1-setup.exe) | 安装后打开 DivoomPCMonitor |
-| Windows 10/11 x64 | [免安装 ZIP v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-win-x64-v1.3.1.zip) | 完整解压，运行 `DivoomPCMonitor/DivoomPCMonitor.exe` |
-| macOS 14+ Apple 芯片 | [Apple 芯片 DMG v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-mac-arm64-v1.3.1.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
-| macOS 14+ Intel 芯片 | [Intel 芯片 DMG v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-mac-x64-v1.3.1.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
+| Windows 10/11 x64 | [Tauri 安装包 v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2-setup.exe) | 安装后打开 DivoomPCMonitor |
+| Windows 10/11 x64 | [免安装 ZIP v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2.zip) | 完整解压，运行 `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple 芯片 | [Apple 芯片 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-arm64-v1.3.2.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
+| macOS 14+ Intel 芯片 | [Intel 芯片 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-x64-v1.3.2.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
 
 发布包自带 .NET 运行时。macOS 包尚未完成 Developer ID 签名、公证及 Mac 实机验收，可能被 Gatekeeper 阻止，详见 [Mac 使用说明](macos/README.md)。Release 同时提供 SHA-256 校验文件。
 
@@ -65,9 +65,9 @@ smartctl 以独立子进程读取 JSON，不安装服务、不运行安装器、
 
 HTTP 请求先缓冲为 UTF-8 JSON，明确设置 Content-Length；避免设备 HTTP 服务不支持分块请求时收不到 Command。桌面与诊断模式均使用相同发送格式。
 
-表盘切换按 Hardware 白名单执行：90/92/96/400/402 → 625，530 → 3191，其它型号跳过。连接失败重试也遵守该规则。此规则独立于端口规则，96/402 仍使用 9000 接口。
+表盘切换按 Hardware 白名单执行：90/92/96/400/402 → 625，TimesFrame 510/511/512 → 1631，530 → 3191，其它型号跳过。连接失败重试也遵守该规则。此规则独立于端口规则，96/402/510/511/512 仍使用 9000 接口。
 
-端口与数据格式独立选择：**400/402/511 使用 `ScreenList/LcdId` 格式，402/511 的地址仍为 9000**，不能把 530 的格式用于所有 9000 设备。511 不自动切换表盘；请在设备上手动打开 PC 监控表盘，固件只更新已打开的 PC 监控页面。
+端口与数据格式独立选择：**400/402/510/511/512 使用 `ScreenList/LcdId` 格式，402/510/511/512 的地址仍为 9000**，不能把 530 的格式用于所有 9000 设备。连接 TimesFrame 时先自动切换到 PC 监控表盘 1631，再发送六项指标；五屏选项仍仅在 400/402 显示。
 
 530 等 API 数据格式使用 `DeviceId`、`AppName` 和包含 `AppTitle/AppData` 的 `DispData` 数组。PC 数据默认不带 `ClockId`；白名单型号遇到旧固件参数格式错误时，使用对应表盘 ID 兼容重试（530 使用 3191），成功后在本次运行中记住该设备要求。其它型号不增加 ClockId 兼容重试。该格式需要有效 DeviceId：选择设备列表会自动填写，也可手动填写。更换 IP 时会清除旧 DeviceId 和 LocalToken。
 

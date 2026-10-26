@@ -47,7 +47,7 @@ var now = DateTimeOffset.UtcNow;
 Metric P(double n) => new(n, "%", "test", now);
 var snapshot = new HardwareSnapshot(now, "Apple M1", P(20), P(55), P(60), 16000, 6400, [gpu], [new("disk0", 0, "APPLE SSD", P(5), P(41))], [], []);
 var packet = DeviceProtocol.Create(snapshot, gpu.Id, "disk0", 4, now);
-foreach (var (hardware, clockId) in new[] { (90, 625), (92, 625), (96, 625), (400, 625), (402, 625), (511, 0), (530, 3191), (999, 0) })
+foreach (var (hardware, clockId) in new[] { (90, 625), (92, 625), (96, 625), (400, 625), (402, 625), (510, 1631), (511, 1631), (512, 1631), (530, 3191), (999, 0) })
 {
     var handler = new Recorder(); using var transport = new DivoomTransport(handler); var target = new DeviceTarget("127.0.0.1", 42, 4, 1, hardware);
     await transport.SelectClockAsync(target, CancellationToken.None);

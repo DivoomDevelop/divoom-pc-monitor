@@ -14,8 +14,8 @@ public sealed record DeviceInfo(int DeviceId, int Hardware, string DeviceName, s
 public sealed record DeviceTarget(string Ip, int DeviceId, int LcdIndex, int LcdIndependence, int Hardware = 0, uint? LocalToken = null)
 {
     public bool UsesLegacyEndpoint => Hardware is 90 or 92 or 400;
-    public bool UsesScreenList => UsesLegacyEndpoint || Hardware is 402 or 511;
-    public int? PcClockId => Hardware switch { 90 or 92 or 96 or 400 or 402 => 625, 530 => 3191, _ => null };
+    public bool UsesScreenList => UsesLegacyEndpoint || Hardware is 402 or 510 or 511 or 512;
+    public int? PcClockId => Hardware switch { 90 or 92 or 96 or 400 or 402 => 625, 510 or 511 or 512 => 1631, 530 => 3191, _ => null };
     public Uri PostUri
     {
         get

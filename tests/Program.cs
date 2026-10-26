@@ -89,7 +89,7 @@ Check(LibreProvider.ChooseCpuTemperature([("CPU Core #1", 60), ("CPU Core #2", 7
 Check(SmartctlParser.Parse("{\"smartctl\":{\"exit_status\":8},\"temperature\":{\"current\":42}}").Value == 42, "SMART health warning does not discard a readable temperature");
 Check(SmartctlParser.Parse("{\"smartctl\":{\"exit_status\":2},\"temperature\":{\"current\":42}}").Value is null, "SMART open failure is not a temperature");
 Check(SmartctlParser.Parse("{}").Value is null, "missing SMART temperature stays missing");
-foreach (int hardware in new[] { 90, 92, 96, 400, 402, 511, 530, 91, 401, 0 })
+foreach (int hardware in new[] { 90, 92, 96, 400, 402, 510, 511, 512, 530, 91, 401, 0 })
 {
     var uri = new DeviceTarget("127.0.0.1", 0, 0, 0, hardware).PostUri;
     bool legacyEndpoint = hardware is 90 or 92 or 400;
@@ -113,7 +113,7 @@ using (var transport = new DivoomTransport(new RecordingHandler()))
     using var payload = JsonDocument.Parse(RecordingHandler.LastBody!);
     Check(payload.RootElement.GetProperty("ScreenList")[0].GetProperty("DispData").GetArrayLength() == 6, "HTTP JSON preserves firmware field casing");
 }
-foreach (var (hardware, clockId) in new[] { (90, (int?)625), (92, (int?)625), (96, (int?)625), (400, (int?)625), (402, (int?)625), (511, (int?)null), (530, (int?)3191), (0, (int?)null), (91, (int?)null), (999, (int?)null) })
+foreach (var (hardware, clockId) in new[] { (90, (int?)625), (92, (int?)625), (96, (int?)625), (400, (int?)625), (402, (int?)625), (510, (int?)1631), (511, (int?)1631), (512, (int?)1631), (530, (int?)3191), (0, (int?)null), (91, (int?)null), (999, (int?)null) })
 {
     var handler = new RecordingHandler();
     using var transport = new DivoomTransport(handler);

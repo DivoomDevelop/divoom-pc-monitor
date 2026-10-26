@@ -4,7 +4,7 @@
 
 A Windows 10/11 x64 and macOS 14+ desktop hardware monitor. Version 1.3.0 uses Tauri 2 for the shared interface and installers, with the existing C# sensor and device-transport backend. Local monitoring works independently of device connections and cloud access.
 
-Current application: **v1.3.1**. Separate Apple Silicon and Intel Mac beta packages share the device transport. See the [Mac guide](macos/README.en.md) and [Tauri build guide](docs/TAURI.md).
+Current application: **v1.3.2**. Separate Apple Silicon and Intel Mac beta packages share the device transport. See the [Mac guide](macos/README.en.md) and [Tauri build guide](docs/TAURI.md).
 
 ## Download and run
 
@@ -12,10 +12,10 @@ Download a ready-to-run package from [GitHub Releases](https://github.com/Divoom
 
 | Platform | Download | Start |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Tauri installer v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-win-x64-v1.3.1-setup.exe) | Install and open DivoomPCMonitor |
-| Windows 10/11 x64 | [Portable ZIP v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-win-x64-v1.3.1.zip) | Extract everything and run `DivoomPCMonitor/DivoomPCMonitor.exe` |
-| macOS 14+ Apple Silicon | [ARM64 DMG v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-mac-arm64-v1.3.1.dmg) | Open the DMG and drag the `.app` into Applications |
-| macOS 14+ Intel | [Intel DMG v1.3.1](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.1/DivoomPCMonitor-mac-x64-v1.3.1.dmg) | Open the DMG and drag the `.app` into Applications |
+| Windows 10/11 x64 | [Tauri installer v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2-setup.exe) | Install and open DivoomPCMonitor |
+| Windows 10/11 x64 | [Portable ZIP v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2.zip) | Extract everything and run `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple Silicon | [ARM64 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-arm64-v1.3.2.dmg) | Open the DMG and drag the `.app` into Applications |
+| macOS 14+ Intel | [Intel DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-x64-v1.3.2.dmg) | Open the DMG and drag the `.app` into Applications |
 
 Packages include the .NET runtime. Keep the complete application directory. Each release includes SHA-256 checksums. Mac packages have not completed Developer ID signing, notarization, or testing on physical Macs; Gatekeeper may block them. See the Mac guide.
 
@@ -63,9 +63,9 @@ Port 80 may be omitted when a URL is displayed. Hardware 0/unknown follows the s
 
 Requests buffer UTF-8 JSON and explicitly set Content-Length to support firmware that cannot read chunked requests. Desktop and diagnostic sending use the same transport.
 
-The clock whitelist is independent of the port rule: 90/92/96/400/402 → 625; 530 → 3191; other models skip selection. Retries respect this whitelist. Models 96 and 402 still use port 9000.
+The clock whitelist is independent of the port rule: 90/92/96/400/402 → 625; TimesFrame 510/511/512 → 1631; 530 → 3191; other models skip selection. Retries respect this whitelist. Models 96, 402 and 510/511/512 still use port 9000.
 
-Data format is also independent of the port: **400, 402 and 511 use ScreenList/LcdId, while 402 and 511 use port 9000**. Do not use the 530 format for every port-9000 device. Model 511 does not switch faces automatically; open its PC monitoring face manually, as the firmware updates only an already active PC monitoring page.
+Data format is also independent of the port: **400/402/510/511/512 use ScreenList/LcdId, while 402/510/511/512 use port 9000**. Do not use the 530 format for every port-9000 device. TimesFrame automatically selects PC monitoring face 1631 before sending the six metrics. Five-screen controls remain exclusive to 400/402.
 
 The API format used by 530 and similar models includes `DeviceId`, `AppName` and a `DispData` array with `AppTitle/AppData`. PC requests omit `ClockId` by default. When older firmware explicitly reports a parameter-format error, a mapped model retries with its own clock ID (3191 for 530); success is remembered for that device during the session. Unmapped models do not add this retry. The API format needs a valid DeviceId, filled by device selection or entered manually. Changing IP clears DeviceId and LocalToken.
 

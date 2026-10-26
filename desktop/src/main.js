@@ -92,7 +92,7 @@ async function init(){
   state.snapshot=state.snapshot||result.snapshot;
   $('language').replaceChildren(new Option(t('跟随系统'),'auto'),...result.languages.map(l=>new Option(l.Name,l.Code)));
   document.querySelectorAll('input,select,button').forEach(el=>el.disabled=false);
-  fillSettings();translate();text('version','v1.3.1');setRunning(result.running);status(result.status);
+  fillSettings();translate();text('version','v1.3.2');setRunning(result.running);status(result.status);
   await invoke('set_language',{code:state.language});render();
   // Refresh age-sensitive fields even when a collection worker stops responding.
   setInterval(render,1000);
