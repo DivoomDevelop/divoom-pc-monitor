@@ -4,6 +4,7 @@
 
 ## 已完成
 
+- v1.3.2 [构建及发布 40275171261](https://github.com/DivoomDevelop/divoom-pc-monitor/actions/runs/40275171261) 四个任务全部成功：Windows、Apple 芯片 Mac、Intel Mac 及发布。三个平台各通过 6 项桌面检查，包含真实后台桥接的 530 和 510/511/512 回环发送。已匿名下载校验文件，确认公开的四个软件包名称、上传状态、大小及 SHA-256 与服务器摘要一致；设备固件测试程序仅在本地提供。
 - v1.3.2：TimesFrame 510/511/512 先发送 `Channel/SetClockSelectId`，ClockId 为 1631，再向 `9000/divoom_api` 发送 ScreenList/LcdId 六项指标；其它型号白名单和仅 400/402 显示五屏选项的规则保持不变。
 - v1.3.2：本地 Windows 186 项、Mac 共享协议/解析/界面 76 项检查通过；桌面 5 项通过，CI 专用发送测试在本地跳过。新增 CI 真实桥接回环测试逐一覆盖 510/511/512 的选表顺序、1631、数据格式、Content-Length 与数字 LocalToken。
 - v1.3.2：511175 实机发送记录 `artifacts/device-send-511-1631-v1.3.2.json` 确认先选 1631，然后 10 秒内 5 次数据更新均成功。只读 `Channel/GetClockInfo` 返回 1631，`Device/GetLocalClockInfo` 确认该表盘名称为“电脑监测 / Computer monitoring”。用户目视确认已显示表盘，但数值未刷新；510/512 尚无实机验收。
