@@ -16,12 +16,12 @@ if ($IsWindows) {
     Copy-Item -LiteralPath docs -Destination $taskPortable -Recurse
     $taskArchive=Join-Path $taskOutput "DivoomPCMonitor-win-x64-v$taskVersion.zip"
     [IO.Compression.ZipFile]::CreateFromDirectory($taskPortable,$taskArchive,[IO.Compression.CompressionLevel]::Optimal,$true)
-    $taskInstaller=Get-ChildItem -LiteralPath (Join-Path $taskRelease 'bundle/nsis') -Filter '*.exe' -File
+    $taskInstaller=Get-ChildItem -LiteralPath (Join-Path $taskRelease 'bundle/nsis') -Filter "DivoomPCMonitor_${taskVersion}_x64-setup.exe" -File
     if ($taskInstaller.Count -ne 1) { throw 'Expected one NSIS installer' }
     Copy-Item -LiteralPath $taskInstaller.FullName -Destination (Join-Path $taskOutput "DivoomPCMonitor-win-x64-v$taskVersion-setup.exe")
 } else {
     $taskArch=if ([Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture -eq 'Arm64') { 'arm64' } else { 'x64' }
-    $taskDmg=Get-ChildItem -LiteralPath (Join-Path $taskRelease 'bundle/dmg') -Filter '*.dmg' -File
+    $taskDmg=Get-ChildItem -LiteralPath (Join-Path $taskRelease 'bundle/dmg') -Filter "DivoomPCMonitor_${taskVersion}_*.dmg" -File
     if ($taskDmg.Count -ne 1) { throw 'Expected one Mac DMG' }
     Copy-Item -LiteralPath $taskDmg.FullName -Destination (Join-Path $taskOutput "DivoomPCMonitor-mac-$taskArch-v$taskVersion.dmg")
 }
