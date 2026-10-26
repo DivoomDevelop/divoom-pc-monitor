@@ -4,7 +4,7 @@
 
 Windows 10/11 x64、macOS 14+ 桌面工具，v1.3.0 起使用 Tauri 2 统一界面和安装包，保留 C# 硬件采集与设备通信后台。本机监控独立运行，不需要先连接设备或访问云端。
 
-当前应用版本 v1.3.2。macOS 分别提供 Apple 芯片与 Intel 芯片测试版，使用、温度支持范围及签名说明见 [macos/README.md](macos/README.md)。Tauri 构建说明见 [docs/TAURI.md](docs/TAURI.md)。
+当前应用版本 v1.3.3。macOS 分别提供 Apple 芯片与 Intel 芯片测试版，使用、温度支持范围及签名说明见 [macos/README.md](macos/README.md)。Tauri 构建说明见 [docs/TAURI.md](docs/TAURI.md)。
 
 ## 下载即用
 
@@ -12,10 +12,10 @@ Windows 10/11 x64、macOS 14+ 桌面工具，v1.3.0 起使用 Tauri 2 统一界�
 
 | 系统 | 下载 | 使用 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Tauri 安装包 v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2-setup.exe) | 安装后打开 DivoomPCMonitor |
-| Windows 10/11 x64 | [免安装 ZIP v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2.zip) | 完整解压，运行 `DivoomPCMonitor/DivoomPCMonitor.exe` |
-| macOS 14+ Apple 芯片 | [Apple 芯片 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-arm64-v1.3.2.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
-| macOS 14+ Intel 芯片 | [Intel 芯片 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-x64-v1.3.2.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
+| Windows 10/11 x64 | [Tauri 安装包 v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-win-x64-v1.3.3-setup.exe) | 安装后打开 DivoomPCMonitor |
+| Windows 10/11 x64 | [免安装 ZIP v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-win-x64-v1.3.3.zip) | 完整解压，运行 `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple 芯片 | [Apple 芯片 DMG v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-mac-arm64-v1.3.3.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
+| macOS 14+ Intel 芯片 | [Intel 芯片 DMG v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-mac-x64-v1.3.3.dmg) | 打开 DMG，将 `.app` 拖到“应用程序” |
 
 发布包自带 .NET 运行时。macOS 包尚未完成 Developer ID 签名、公证及 Mac 实机验收，可能被 Gatekeeper 阻止，详见 [Mac 使用说明](macos/README.md)。Release 同时提供 SHA-256 校验文件。
 

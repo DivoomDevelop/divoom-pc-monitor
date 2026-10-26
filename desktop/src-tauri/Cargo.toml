@@ -1,6 +1,6 @@
 [package]
 name = "divoom-pc-monitor"
-version = "1.3.2"
+version = "1.3.3"
 description = "Divoom PC hardware monitor"
 edition = "2021"
 [build-dependencies]

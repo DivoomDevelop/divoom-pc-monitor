@@ -4,7 +4,7 @@
 
 A Windows 10/11 x64 and macOS 14+ desktop hardware monitor. Version 1.3.0 uses Tauri 2 for the shared interface and installers, with the existing C# sensor and device-transport backend. Local monitoring works independently of device connections and cloud access.
 
-Current application: **v1.3.2**. Separate Apple Silicon and Intel Mac beta packages share the device transport. See the [Mac guide](macos/README.en.md) and [Tauri build guide](docs/TAURI.md).
+Current application: **v1.3.3**. Separate Apple Silicon and Intel Mac beta packages share the device transport. See the [Mac guide](macos/README.en.md) and [Tauri build guide](docs/TAURI.md).
 
 ## Download and run
 
@@ -12,10 +12,10 @@ Download a ready-to-run package from [GitHub Releases](https://github.com/Divoom
 
 | Platform | Download | Start |
 | --- | --- | --- |
-| Windows 10/11 x64 | [Tauri installer v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2-setup.exe) | Install and open DivoomPCMonitor |
-| Windows 10/11 x64 | [Portable ZIP v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-win-x64-v1.3.2.zip) | Extract everything and run `DivoomPCMonitor/DivoomPCMonitor.exe` |
-| macOS 14+ Apple Silicon | [ARM64 DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-arm64-v1.3.2.dmg) | Open the DMG and drag the `.app` into Applications |
-| macOS 14+ Intel | [Intel DMG v1.3.2](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.2/DivoomPCMonitor-mac-x64-v1.3.2.dmg) | Open the DMG and drag the `.app` into Applications |
+| Windows 10/11 x64 | [Tauri installer v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-win-x64-v1.3.3-setup.exe) | Install and open DivoomPCMonitor |
+| Windows 10/11 x64 | [Portable ZIP v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-win-x64-v1.3.3.zip) | Extract everything and run `DivoomPCMonitor/DivoomPCMonitor.exe` |
+| macOS 14+ Apple Silicon | [ARM64 DMG v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-mac-arm64-v1.3.3.dmg) | Open the DMG and drag the `.app` into Applications |
+| macOS 14+ Intel | [Intel DMG v1.3.3](https://github.com/DivoomDevelop/divoom-pc-monitor/releases/download/v1.3.3/DivoomPCMonitor-mac-x64-v1.3.3.dmg) | Open the DMG and drag the `.app` into Applications |
 
 Packages include the .NET runtime. Keep the complete application directory. Each release includes SHA-256 checksums. Mac packages have not completed Developer ID signing, notarization, or testing on physical Macs; Gatekeeper may block them. See the Mac guide.
 

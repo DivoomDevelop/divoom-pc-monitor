@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Divoom.MacMonitor</AssemblyName>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <UseAppHost>true</UseAppHost>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
